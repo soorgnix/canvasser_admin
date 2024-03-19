@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Interactive Google Map with Markers</title>
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src=""></script>
+    <script>
+      function initMap() {
+        // Array of locations with their coordinates and descriptions
+        var locations = [
+          {% for coordinate in coordinates %}        
+          {
+            position: { lat: {{ coordinate.lat }}, lng: {{ coordinate.lng }} },
+            description: "{{ coordinate.description }}"
+          },
+          {% endfor %}
+        ];
+    
+        var lineSymbol = {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+        };
+        const line = new google.maps.Polyline({
+          path: locations.map(location => location.position),
+          geodesic: true,
+          strokeColor: "#0000FF",
+          strokeOpacity: 1.0,
+          strokeWeight: 2,
+          icons: [{
+            icon: lineSymbol,
+            offset: '100%',
+            repeat: '100px'
+          }]
+        });
+    
+        var mapOptions = {
+          center: locations[0].position,
+          zoom: 16
+        };
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        line.setMap(map);
+    
+        // Loop through the locations array and add markers to the map
+        for (var i = 0; i < locations.length; i++) {
+          addMarker(locations[i]);
+        }
+    
+        function addMarker(location) {
+          var marker = new google.maps.Marker({
+            position: location.position,
+            map: map,
+            title: location.description
+          });
+    
+          var infoWindow = new google.maps.InfoWindow({
+            content: location.description
+          });
+    
+          marker.addListener("click", function() {
+            infoWindow.open(map, marker);
+          });
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+    <br><br>
+    <form method="POST" action="{% url 'customer_map' %}">    
+      {% csrf_token %}
+          <table>
+              <tr>
+                  <td>ID</td>
+                  <td><input type="textbox" name="idFilter" value="{{customerMapFilter.idFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Name</td>
+                  <td><input type="textbox" name="nameFilter" value="{{customerMapFilter.nameFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Address</td>
+                  <td><input type="textbox" name="addressFilter" value="{{customerMapFilter.addressFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Daerah</td>
+                  <td><input type="textbox" name="daerahFilter" value="{{customerMapFilter.daerahFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>PIC</td>
+                  <td><input type="textbox" name="picFilter" value="{{customerMapFilter.picFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Phone</td>
+                  <td><input type="textbox" name="phoneFilter" value="{{customerMapFilter.phoneFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Master List</td>
+                  <td><input type="textbox" name="masterlistFilter" value="{{customerMapFilter.masterlistFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Invoice Date</td>
+                  <td><input type="date" name="invoiceDateFilter" value="{{customerMapFilter.invoiceDateFilter}}"> to <input type="date" name="invoiceDateToFilter" value="{{customerMapFilter.invoiceDateToFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Due Date</td>
+                  <td><input type="date" name="dueDateFilter" value="{{customerMapFilter.dueDateFilter}}"> to <input type="date" name="dueDateToFilter" value="{{customerMapFilter.dueDateToFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Delivery Date</td>
+                  <td><input type="date" name="deliveryDateFilter" value="{{customerMapFilter.delivertDateFilter}}"> to <input type="date" name="deliveryDateToFilter" value="{{customerMapFilter.delivertDateToFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Complete Date</td>
+                  <td><input type="date" name="completeDateFilter" value="{{customerMapFilter.completeDateFilter}}"> to <input type="date" name="completeDateToFilter" value="{{customerMapFilter.completeDateToFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Last Order</td>
+                  <td><input type="textbox" name="lastOrderFilter" value="{{customerMapFilter.lastOrderFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Payment Type</td>
+                  <td><input type="textbox" name="paymentTypeFilter" value="{{customerMapFilter.paymentTypeFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Payment Details</td>
+                  <td><input type="textbox" name="paymentDetailsFilter" value="{{customerMapFilter.paymentDetailsFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Debt</td>
+                  <td><input type="textbox" name="debtFilter" value="{{customerMapFilter.debtFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Status</td>
+                  <td><input type="textbox" name="statusFilter" value="{{customerMapFilter.statusFilter}}"></td>
+              </tr>
+              <tr>
+                  <td>Raport</td>
+                  <td>
+                      <select name="raportFilter">
+                          <option value="all" {% if customerMapFilter.raportFilter == "all" %}selected{% endif %}>All</option>
+                          <option value="lancar" {% if customerMapFilter.raportFilter == "lancar" %}selected{% endif %}>Lancar</option>
+                          <option value="terlambat" {% if customerMapFilter.raportFilter == "terlambat" %}selected{% endif %}>Terlambat</option>
+                          <option value="menunggak" {% if customerMapFilter.raportFilter == "menunggak" %}selected{% endif %}>Menunggak</option>
+                          <option value="in order" {% if customerMapFilter.raportFilter == "in order" %}selected{% endif %}>In Order</option>
+                      </select>
+                  </td>
+              </tr>
+              <tr>
+                <td>Sheet Delivery Date</td>
+                <td><input type="date" name="deliverySheetDateFilter" value="{{customerMapFilter.deliverySheetDateFilter}}"> to <input type="date" name="deliverySheetDateToFilter" value="{{customerMapFilter.deliverySheetDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Driver Name</td>
+                <td><input type="textbox" name="driverNameFilter" value="{{customerMapFilter.driverNameFilter}}"></td>
+            </tr>
+              <tr>
+                  <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+              </tr>
+          </table>
+      </form>
+      <br>    
+</form>
+    <h1>Interactive Google Map with Markers</h1>
+    <div id="map"></div>
+
+    <script>
+      // Call the initMap function when the page has finished loading
+      window.addEventListener("load", initMap);
+    </script>
+  </body>
+</html>

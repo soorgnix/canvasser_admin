@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Customer List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+   <br><br>
+    <form method="POST" action="{% url 'newcustomer_list' %}">    
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="textbox" name="nameFilter" value="{{newcustomerFilter.nameFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><input type="textbox" name="addressFilter" value="{{newcustomerFilter.addressFilter}}"></td>
+        </tr>
+        <tr>
+            <td>PIC</td>
+            <td><input type="textbox" name="picFilter" value="{{newcustomerFilter.picFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><input type="textbox" name="phoneFilter" value="{{newcustomerFilter.phoneFilter}}"></td>
+        </tr>
+        <tr>
+            <td>User</td>
+            <td><input type="textbox" name="userFilter" value="{{newcustomerFilter.userFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Added Flag</td>
+            <td>
+                <select name="addedFilter">
+                    <option value="true" {% if newcustomerFilter.addedFilter == "true" %}selected{% endif %}>true</option>
+                    <option value="false" {% if newcustomerFilter.addedFilter == "false" %}selected{% endif %}>false</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Sort By</td>
+            <td>                
+                <select name="sortFilter">
+                    <option value="name" {% if newcustomerFilter.sortFilter == "name" %}selected{% endif %}>Name</option>
+                    <option value="address" {% if newcustomerFilter.sortFilter == "address" %}selected{% endif %}>Address</option>
+                    <option value="pic" {% if newcustomerFilter.sortFilter == "pic" %}selected{% endif %}>PIC</option>
+                    <option value="phone" {% if newcustomerFilter.sortFilter == "phone" %}selected{% endif %}>Phone</option>
+                    <option value="note" {% if newcustomerFilter.sortFilter == "note" %}selected{% endif %}>Note</option>
+                    <option value="added" {% if newcustomerFilter.sortFilter == "added" %}selected{% endif %}>Added</option>
+                    <option value="user_id" {% if newcustomerFilter.sortFilter == "user_id" %}selected{% endif %}>Assignment</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Sort By Type</td>
+            <td>                
+                <select name="sortTypeFilter">
+                    <option value="asc" {% if newcustomerFilter.sortTypeFilter == "asc" %}selected{% endif %}>Asc</option>
+                    <option value="desc" {% if newcustomerFilter.sortTypeFilter == "desc" %}selected{% endif %}>Desc</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+        </tr>
+    </table>
+    </form>
+    <br>    
+    <h1>New Customers List</h1>
+    <table border="1">
+        <tr>
+            <td><b>Name</b></td>
+            <td><b>Address</b></td>
+            <td><b>PIC</b></td>
+            <td><b>Phone</b></td>
+            <td><b>AddedDate</b></td>
+            <td><b>UpdateTime</b></td>
+            <td><b>Location</b></td>
+            <td><b>Note</b></td>
+            <td><b>Added Flag</b></td>
+            <td><b>User</b></td>
+            <td><b>Edit</b></td>
+            <td><b>Delete</b></td>
+        </tr>
+        {% for newcustomer in newcustomers %}
+    <tr>
+        <input type=hidden name="Id" value="{{ newcustomer.id }}">
+        <td>{{ newcustomer.name }}</td>
+        <td>{{ newcustomer.address }}</td>
+        <td>{{ newcustomer.pic }}</td>
+        <td>{{ newcustomer.phone }}</td>
+        <td>{{ newcustomer.addedDate }}</td>
+        <td>{{ newcustomer.updateDate }}</td>
+        <td>{{ newcustomer.location }}</td>
+        <td>{{ newcustomer.note }}</td>
+        <td>{{ newcustomer.added }}</td>
+        <td>{{ newcustomer.user_id }}</td>
+        <td><a href="/newcustomer/edit?id={{newcustomer.id}}">Edit</a></td>
+        <td><a href="/newcustomer/delete?id={{newcustomer.id}}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <tr><td>No posts available.</td></tr>
+    {% endfor %}
+    </table>
+</form>
+</body>
+</html>

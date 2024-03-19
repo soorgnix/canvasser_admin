@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Interactive Google Map with Markers</title>
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src=""></script>
+    <script>
+      function initMap() {
+        // Array of locations with their coordinates and descriptions
+        var locations = [{% for coordinate in coordinates %}        
+          {
+            position: { lat: {{ coordinate.lat }}, lng: {{ coordinate.lng }} },
+            description: "{{ coordinate.description }}"
+          },{% endfor %}
+        ];
+
+        var mapOptions = {
+          center: locations[0].position,
+          zoom: 16
+        };
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        // Loop through the locations array and add markers to the map
+        for (var i = 0; i < locations.length; i++) {
+          addMarker(locations[i]);
+        }
+
+        function addMarker(location) {
+            var marker = new google.maps.Marker({
+            position: location.position,
+            map: map,
+            title: location.description
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+            content: location.description
+        });
+
+        marker.addListener("click", function() {
+            infoWindow.open(map, marker);
+        });
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>
+    <form method="POST" action="{% url 'newcustomer_map' %}">    
+    {% csrf_token %}
+    <table>
+      <tr>
+          <td>Name</td>
+          <td><input type="textbox" name="nameFilter" value="{{newcustomerFilter.nameFilter}}"></td>
+      </tr>
+      <tr>
+          <td>Address</td>
+          <td><input type="textbox" name="addressFilter" value="{{newcustomerFilter.addressFilter}}"></td>
+      </tr>
+      <tr>
+          <td>PIC</td>
+          <td><input type="textbox" name="picFilter" value="{{newcustomerFilter.picFilter}}"></td>
+      </tr>
+      <tr>
+          <td>Phone</td>
+          <td><input type="textbox" name="phoneFilter" value="{{newcustomerFilter.phoneFilter}}"></td>
+      </tr>
+      <tr>
+          <td>User</td>
+          <td><input type="textbox" name="userFilter" value="{{newcustomerFilter.userFilter}}"></td>
+      </tr>
+      <tr>
+          <td>Added Flag</td>
+          <td>
+              <select name="addedFilter">
+                  <option value="true" {% if newcustomerFilter.addedFilter == "true" %}selected{% endif %}>true</option>
+                  <option value="false" {% if newcustomerFilter.addedFilter == "false" %}selected{% endif %}>false</option>
+              </select>
+          </td>
+      </tr>
+      <tr>
+          <td>Sort By</td>
+          <td>                
+              <select name="sortFilter">
+                  <option value="name" {% if newcustomerFilter.sortFilter == "name" %}selected{% endif %}>Name</option>
+                  <option value="address" {% if newcustomerFilter.sortFilter == "address" %}selected{% endif %}>Address</option>
+                  <option value="pic" {% if newcustomerFilter.sortFilter == "pic" %}selected{% endif %}>PIC</option>
+                  <option value="phone" {% if newcustomerFilter.sortFilter == "phone" %}selected{% endif %}>Phone</option>
+                  <option value="note" {% if newcustomerFilter.sortFilter == "note" %}selected{% endif %}>Note</option>
+                  <option value="added" {% if newcustomerFilter.sortFilter == "added" %}selected{% endif %}>Added</option>
+                  <option value="user_id" {% if newcustomerFilter.sortFilter == "user_id" %}selected{% endif %}>Assignment</option>
+              </select>
+          </td>
+      </tr>
+      <tr>
+          <td>Sort By Type</td>
+          <td>                
+              <select name="sortTypeFilter">
+                  <option value="asc" {% if newcustomerFilter.sortTypeFilter == "asc" %}selected{% endif %}>Asc</option>
+                  <option value="desc" {% if newcustomerFilter.sortTypeFilter == "desc" %}selected{% endif %}>Desc</option>
+              </select>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+      </tr>
+  </table>
+  </form>
+    <br>    
+</form>
+    <h1>Interactive Google Map with Markers</h1>
+    <div id="map"></div>
+
+    <script>
+      // Call the initMap function when the page has finished loading
+      window.addEventListener("load", initMap);
+    </script>
+  </body>
+</html>

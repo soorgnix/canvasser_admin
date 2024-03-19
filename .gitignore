@@ -1,0 +1,10 @@
+canvas/settings.py
+canvas/__pycache__/
+cnvadmin/__pycache__/
+cnvadmin/dto/__pycache__/
+cnvadmin/migrations/__pycache__/
+cnvadmin/utils/__pycache__/
+cnvadmin/view/__pycache__/
+credentials/serviceAccountKey-test.json
+credentials/serviceAccountKey.json
+cnvadmin/config.py

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Customer List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>    
+    <form method="POST" action="{% url 'user_list' %}">    
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>Email</td>
+            <td><input type="textbox" name="emailFilter" value="{{userFilter.emailFilter}}"></td>
+        </tr>
+            <td>Delete</td>
+            <td>
+                <select name="deletedFilter">
+                    <option value="False" {% if userFilter.deletedFilter == "False" %}selected{% endif %}>False</option>
+                    <option value="True" {% if userFilter.deletedFilter == "True" %}selected{% endif %}>True</option>                    
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+        </tr>
+    </table>
+    </form>
+    <br>    
+    <td><a href="/user/add">Add</a></td>
+    <h1>User List</h1>
+    <table border="1">
+        <tr>
+            <td><b>Email</b></td>
+            <td><b>Phone</b></td>
+            <td><b>Deleted</b></td>
+            <td><b>Edit</b></td>
+        </tr>
+        {% for user in users %}
+    <tr>
+        <input type=hidden name="Id" value="{{ user.id }}">
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.deleted }}</td>
+        <td><a href="/user/edit?id={{user.id}}">Edit</a></td>
+    </tr>
+    {% empty %}
+    <tr><td>No posts available.</td></tr>
+    {% endfor %}
+    </table>
+</form>
+</body>
+</html>

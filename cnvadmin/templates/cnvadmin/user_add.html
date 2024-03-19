@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>user add</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>
+    <form method="POST" action="{% url 'user_add_execute' %}">            
+    {% csrf_token %}
+    <table border="2">
+        <tr>
+            <td colspan="2" align="center">new user</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="email"></td>
+        </tr>
+        <tr>
+            <td>Deleted</td>
+            <td>
+                <select name="deleted">
+                    <option value="False">False</option>
+                    <option value="True">True</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><input type="text" name="phone"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%">Submit</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

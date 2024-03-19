@@ -1,0 +1,251 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+    <br><br>
+    <form method="POST" action="{% url 'customer_list' %}">    
+    {% csrf_token %}
+        <table>
+            <tr>
+                <td>Visits</td>
+                <td><input type="date" name="dateFilter" value="{{customerFilter.dateFilter}}"></td>
+            </tr>
+            <tr>
+                <td>ID</td>
+                <td><input type="textbox" name="idFilter" value="{{customerFilter.idFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td><input type="textbox" name="nameFilter" value="{{customerFilter.nameFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="textbox" name="addressFilter" value="{{customerFilter.addressFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Daerah</td>
+                <td><input type="textbox" name="daerahFilter" value="{{customerFilter.daerahFilter}}"></td>
+            </tr>
+            <tr>
+                <td>PIC</td>
+                <td><input type="textbox" name="picFilter" value="{{customerFilter.picFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td><input type="textbox" name="phoneFilter" value="{{customerFilter.phoneFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Master List</td>
+                <td><input type="textbox" name="masterlistFilter" value="{{customerFilter.masterlistFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Invoice Date</td>
+                <td><input type="date" name="invoiceDateFilter" value="{{customerFilter.invoiceDateFilter}}"> to <input type="date" name="invoiceDateToFilter" value="{{customerFilter.invoiceDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Due Date</td>
+                <td><input type="date" name="dueDateFilter" value="{{customerFilter.dueDateFilter}}"> to <input type="date" name="dueDateToFilter" value="{{customerFilter.dueDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Delivery Date</td>
+                <td><input type="date" name="deliveryDateFilter" value="{{customerFilter.deliveryDateFilter}}"> to <input type="date" name="deliveryDateToFilter" value="{{customerFilter.deliveryDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Complete Date</td>
+                <td><input type="date" name="completeDateFilter" value="{{customerFilter.completeDateFilter}}"> to <input type="date" name="completeDateToFilter" value="{{customerFilter.completeDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Last Order</td>
+                <td><input type="textbox" name="lastOrderFilter" value="{{customerFilter.lastOrderFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Payment Type</td>
+                <td><input type="textbox" name="paymentTypeFilter" value="{{customerFilter.paymentTypeFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Payment Details</td>
+                <td><input type="textbox" name="paymentDetailsFilter" value="{{customerFilter.paymentDetailsFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Debt</td>
+                <td><input type="textbox" name="debtFilter" value="{{customerFilter.debtFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td><input type="textbox" name="statusFilter" value="{{customerFilter.statusFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Sheet Delivery Date</td>
+                <td><input type="date" name="deliverySheetDateFilter" value="{{customerFilter.deliverySheetDateFilter}}"> to <input type="date" name="deliverySheetDateToFilter" value="{{customerFilter.deliverySheetDateToFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Driver Name</td>
+                <td><input type="textbox" name="driverNameFilter" value="{{customerFilter.driverNameFilter}}"></td>
+            </tr>
+            <tr>
+                <td>Raport</td>
+                <td>
+                    <select name="raportFilter">
+                        <option value="all" {% if customerFilter.raportFilter == "all" %}selected{% endif %}>All</option>
+                        <option value="lancar" {% if customerFilter.raportFilter == "lancar" %}selected{% endif %}>Lancar</option>
+                        <option value="terlambat" {% if customerFilter.raportFilter == "terlambat" %}selected{% endif %}>Terlambat</option>
+                        <option value="menunggak" {% if customerFilter.raportFilter == "menunggak" %}selected{% endif %}>Menunggak</option>
+                        <option value="in order" {% if customerFilter.raportFilter == "in order" %}selected{% endif %}>In Order</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Sort By</td>
+                <td>                
+                    <select name="sortFilter">
+                        <option value="id" {% if customerFilter.sortFilter == "id" %}selected{% endif %}>ID</option>
+                        <option value="name" {% if customerFilter.sortFilter == "name" %}selected{% endif %}>Name</option>
+                        <option value="address" {% if customerFilter.sortFilter == "address" %}selected{% endif %}>Address</option>
+                        <option value="daerah" {% if customerFilter.sortFilter == "daerah" %}selected{% endif %}>Daerah</option>
+                        <option value="contact_person" {% if customerFilter.sortFilter == "contact_person" %}selected{% endif %}>PIC</option>
+                        <option value="no_telp" {% if customerFilter.sortFilter == "no_telp" %}selected{% endif %}>Phone</option>
+                        <option value="master_list" {% if customerFilter.sortFilter == "master_list" %}selected{% endif %}>Master List</option>
+                        <option value="invoice_date" {% if customerFilter.sortFilter == "invoice_date" %}selected{% endif %}>Invoice Date</option>
+                        <option value="due_date" {% if customerFilter.sortFilter == "due_date" %}selected{% endif %}>Due Date</option>
+                        <option value="delivery_date" {% if customerFilter.sortFilter == "delivery_date" %}selected{% endif %}>Delivery Date</option>
+                        <option value="complete_date" {% if customerFilter.sortFilter == "complete_date" %}selected{% endif %}>Complete Date</option>
+                        <option value="payment_type" {% if customerFilter.sortFilter == "payment_type" %}selected{% endif %}>Payment Type</option>
+                        <option value="payment_details" {% if customerFilter.sortFilter == "payment_details" %}selected{% endif %}>Payment Details</option>
+                        <option value="debt" {% if customerFilter.sortFilter == "debt" %}selected{% endif %}>Debt</option>
+                        <option value="status" {% if customerFilter.sortFilter == "status" %}selected{% endif %}>Status</option>
+                        <option value="raport" {% if customerFilter.sortFilter == "raport" %}selected{% endif %}>Raport</option>
+                        <option value="delivery_sheet_date" {% if customerFilter.sortFilter == "delivery_sheet_date" %}selected{% endif %}>Delivery Sheet Date</option>
+                        <option value="driver_name" {% if customerFilter.sortFilter == "driver_name" %}selected{% endif %}>Driver Name</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Sort By Type</td>
+                <td>                
+                    <select name="sortTypeFilter">
+                        <option value="asc" {% if visitFilter.sortTypeFilter == "asc" %}selected{% endif %}>Asc</option>
+                        <option value="desc" {% if visitFilter.sortTypeFilter == "desc" %}selected{% endif %}>Desc</option>
+                    </select>
+                </td>
+            </tr>    
+            <tr>
+                <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+            </tr>
+        </table>
+    </form>
+    <br>    
+    <label>Select All:</label>
+    <input type="checkbox" id="selectAll">
+    <form method="POST" action="{% url 'save_selected_items' %}">
+    {% csrf_token %}
+    Visit Date: <input type="date" name="visitDate" value = "{{customerFilter.dateFilter}}" readonly><br>
+        Canvasser: <select name="canvasser_id">
+            {% for email in users %}
+            <option value="{{email}}">{{ email }}</option>
+            {% endfor %}
+        </select>
+    <button type="submit">Create Schedule</button>
+    <h1>Customer List</h1>
+    <table id="customerTable" border="1">
+        <tr bgcolor="#696969" style="color: white;">
+            <td><b>Select</b></td>
+            <td><b>ID</b></td>
+            <td><b>Name</b></td>
+            <td><b>Address</b></td>
+            <td><b>Daerah</b></td>
+            <td><b>Location</b></td>
+            <td><b>PIC</b></td>
+            <td><b>Phone Number</b></td>
+            <td><b>Master List</b></td>
+            <td><b>Invoice Date</b></td>
+            <td><b>Due Date</b></td>
+            <td><b>Delivery Date</b></td>
+            <td><b>Complete Date</b></td>
+            <td><b>Last Order</b></td>
+            <td><b>Payment Type</b></td>
+            <td><b>Payment Details</b></td>
+            <td><b>Debt</b></td>
+            <td><b>Raport</b></td>
+            <td><b>Delivery Date</b></td>
+            <td><b>Driver Name</b></td>
+            <td><b>Status</b></td>
+        </tr>
+        {% for customer in customers %}
+    <tr valign="top">
+        <td bgcolor="#F5DEB3"><input type="checkbox" name="selected_items" value="{{ customer.id }}"></td>
+        <td bgcolor="#00BFFF">{{ customer.id }}</td>
+        <td bgcolor="#00BFFF">{{ customer.name|default:"" }}</td>
+        <td bgcolor="#00BFFF">{{ customer.address|default:"" }}</td>
+        <td bgcolor="#00BFFF">{{ customer.daerah|default:"" }}</td>
+        {% if customer.location == ""%}
+        <td bgcolor="#00BFFF"><a href="/customer_location/edit?id={{customer.id}}">Set Location</a></td>
+        {% else%}
+        <td bgcolor="#00BFFF"><a href="/customer_location/edit?id={{customer.id}}">{{ customer.location|default:"" }}</a></td>
+        {% endif%}
+        <td bgcolor="#00BFFF">{{ customer.contact_person|default:"" }}</td>
+        <td bgcolor="#00BFFF">{{ customer.no_telp|default:"" }}</td>
+        <td bgcolor="#00BFFF">{{ customer.master_list_order|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_invoice|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_duedate|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_delivery|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_complete|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_order|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.last_payment|default:"" }}</td>
+        <td bgcolor="#48D1CC">{{ customer.payment_details|default:"" }}</td>
+        <td bgcolor="#FA8072">{{ customer.debt|default:"" }}</td>
+        {% if "Lancar" in customer.raport_string %}
+        <td bgcolor="#90EE90">{{ customer.raport_string|default:""}}</td>
+        {% elif "Terlambat" in customer.raport_string %}
+        <td bgcolor="#DAA520">{{ customer.raport_string|default:""}}</td>
+        {% elif "Menunggak" in customer.raport_string %}
+        <td bgcolor="#CD5C5C">{{ customer.raport_string|default:""}}</td>
+        {% elif "Waiting" in customer.raport_string %}
+        <td bgcolor="#00BFFF">{{ customer.raport_string|default:""}}</td>
+        {% else %}
+        <td bgcolor="#FFFFFF">{{ customer.raport_string|default:""}}</td>
+        {% endif %}
+        <td bgcolor="#FFFFFF">{{ customer.delivery_date }}</td>
+        <td bgcolor="#FFFFFF">{{ customer.driver_name }}</td>
+        <td bgcolor="#48D1CC">{{ customer.status_id|default:"" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td>No posts available.</td></tr>
+    {% endfor %}
+    </table>
+</form>
+</body>
+</html>
+
+<script>
+$(document).ready(function() {
+  // Event handler for the auto-check button
+  $('#autoCheckButton').click(function() {
+    // Get all the checkboxes in the table
+    var checkboxes = $('#customerTable').find('input[type="checkbox"]');
+    
+    // Check all checkboxes
+    checkboxes.prop('checked', true);
+  });
+
+  // Event handler for the select all checkbox
+  $('#selectAll').change(function() {
+    // Get all the checkboxes in the table
+    var checkboxes = $('#customerTable').find('input[type="checkbox"]');
+    
+    // Check or uncheck all checkboxes based on the select all checkbox
+    checkboxes.prop('checked', $(this).is(':checked'));
+  });
+});
+</script>

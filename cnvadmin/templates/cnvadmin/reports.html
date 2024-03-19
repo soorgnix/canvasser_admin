@@ -1,0 +1,64 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>
+    <form method="POST" action="{% url 'reports' %}">    
+    {% csrf_token %}
+    Periodical Report
+    <table>
+        <tr>
+            <td>From</td>
+            <td><input type="date" name="dateFromFilter"></td>
+        </tr>
+        <tr>
+            <td>From</td>
+            <td><input type="date" name="dateToFilter"></td>
+        </tr>
+        <tr>
+            <td>Raport</td>
+            <td>
+                <select name="reportTypeFilter">
+                    <option value="canvasser">BY Canvasser</option>
+                    <option value="customer">BY Customer</option>                    
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%" name="action" value="filter">Go</button></td>
+        </tr>
+    </table>
+    </form>
+
+    <form method="POST" action="{% url 'reports2' %}">    
+        {% csrf_token %}
+        Special Report
+        <table>
+            <tr>
+                <td>Raport</td>
+                <td>
+                    <select name="reportTypeFilter">
+                        <option value="location">Location</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><button type="submit" width="100%" name="action" value="filter">Go</button></td>
+            </tr>
+        </table>
+        </form>
+</body>
+</html>

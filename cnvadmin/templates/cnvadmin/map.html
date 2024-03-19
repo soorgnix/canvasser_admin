@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Interactive Google Map with Markers</title>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <script src=""></script>
+  <script>
+    function initMap() {
+      // Array of locations with their coordinates and descriptions
+      const locations = [
+          {% for coordinate in coordinates %}
+              {
+                  position: { lat: {{ coordinate.lat }}, lng: {{ coordinate.lng }} },
+                  description: "{{ coordinate.description }}"
+              },
+          {% endfor %}
+      ];
+
+      const uncheckLocations = [
+          {% for coordinate in uncheckCoordinates %}
+              {
+                  position: { lat: {{ coordinate.lat }}, lng: {{ coordinate.lng }} },
+                  description: "{{ coordinate.description }}"
+              },
+          {% endfor %}
+      ];
+
+    console.log(uncheckLocations);
+
+    var lineSymbol = {
+      path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+    };
+
+    const line = new google.maps.Polyline({
+      path: locations.map(location => location.position),
+      geodesic: true,
+      strokeColor: "green",
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      icons: [{
+        icon: lineSymbol,
+        offset: '100%',
+        repeat: '100px'
+      }]
+    });
+
+    var mapOptions = {
+      center: locations[0].position,
+      zoom: 16
+    };
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    line.setMap(map);
+
+    // Loop through the locations array and add markers to the map
+    for (var i = 0; i < locations.length; i++) {
+      if (i == 0) {
+        addMarker(locations[i], "blue", 10);
+      } else if (i == locations.length -1) {
+        addMarker(locations[i], "orange", 10);
+      } else {
+        addMarker(locations[i], "green", 6);
+      }
+    }
+    for (var i = 0; i < uncheckLocations.length; i++) {
+      addMarker(uncheckLocations[i], "red", 8);
+    }
+
+    function addMarker(location, color, scale) {
+      var icon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: color,
+        fillOpacity: 1,
+        strokeWeight: 0,
+        scale: scale, 
+      };
+      var marker = new google.maps.Marker({
+        position: location.position,
+        map: map,
+        title: location.description,
+        icon: icon
+      });
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: location.description
+      });
+
+      marker.addListener("click", function () {
+        infoWindow.open(map, marker);
+      });
+    }      
+  }
+  </script>
+</head>
+
+<body>
+  <a href="/customer">customer</a>
+  <a href="/customer_map">customer map</a>
+  <a href="/visit">visit</a>
+  <a href="/map">map</a>
+  <a href="/newcustomer">newcustomer</a>
+  <a href="/newcustomer_map">newcustomer map</a>
+  <a href="/reports">report</a>
+  <a href="/users">users</a>
+  <a href="/visit_bulk_delete">visit bulk delete</a>
+  <br><br>
+  <form method="POST" action="{% url 'map' %}">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <td>Visits</td>
+        <td><input type="date" name="dateFilter" value="{{visitFilter.dateFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td><input type="textbox" name="nameFilter" value="{{visitFilter.nameFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td><input type="textbox" name="addressFilter" value="{{visitFilter.addressFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Area</td>
+        <td><input type="textbox" name="areaFilter" value="{{visitFilter.areaFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Customer Code</td>
+        <td><input type="textbox" name="customerCodeFilter" value="{{visitFilter.customerCodeFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Phone</td>
+        <td><input type="textbox" name="picFilter" value="{{visitFilter.picFilter}}"></td>
+      </tr>
+      <tr>
+        <td>Assignment</td>
+        <td>
+          <select name="userFilter">
+            {% for user in assignment %}
+              <option value="{{ user }}" {% if visitFilter.userFilter == user %}selected{% endif %}>{{ user }}</option>
+            {% endfor %}
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center"><button type="submit" width="100%">Filter</button></td>
+      </tr>
+    </table>
+  </form>
+  <br>
+  </form>
+  <h1>Interactive Google Map with Markers</h1>
+  <div id="map"></div>
+
+  <script>
+    // Call the initMap function when the page has finished loading
+    window.addEventListener("load", initMap);
+  </script>
+</body>
+
+</html>

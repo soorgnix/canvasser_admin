@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Canvasser Admin - WhatsApp Broadcaster</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+    <header>
+        <div id="nav-placeholder">
+        </div>
+        <div class="feature-title">
+            <h1>WhatsApp Broadcaster</h1>
+        </div>
+    </header>
+    <main>
+        <div class="form">
+            <form method="POST" action="{% url 'whatsapp_view' %}">
+            {% csrf_token %}
+                <div class="whatsapp_broadcast_input_select">
+                    <select name="categorySelect">
+                        <option value="0">---Please Select---</option>
+                        <option value="1" {% if categorySelect == 1 %}selected{% endif %}>Belum Order 30 hari terakhir</option>
+                        <option value="2" {% if categorySelect == 2 %}selected{% endif %}>Ada Tagihan</option>
+                        <option value="3" {% if categorySelect == 3 %}selected{% endif %}>Delivered Cash</option>
+                        <option value="4" {% if categorySelect == 4 %}selected{% endif %}>Delivered Tempo</option>
+                    </select>
+                    <button type="submit" width="100%">Filter</button>
+                </div>
+            </form>
+            <br>
+            <form method="POST" action="{% url 'whatsapp_set_message' %}">
+            {% csrf_token %}
+                <input type="hidden" name="categorySelected" value="{{ categorySelect }}">
+                <div class="whatsapp_broadcast_input_message">
+                    <h3>Message Format</h3>
+                    <textarea name="inputMessage" style="width: 500px; height: 100px;">{{ inputMessage }}</textarea>                    
+                    Preview <textarea name="previewMessage" style="width: 500px; height: 100px;" disabled>{{ currentMessage }}</textarea>
+                </div>
+                <button type="submit" width="100%">Set Message</button>
+            </form>
+            <br>
+            <form method="POST" action="{% url 'whatsapp_execute' %}">
+            {% csrf_token %}
+                <input type="hidden" name="categorySelectExecute" value="{{ categorySelectExecute }}">
+                <input type="hidden" name="inputMessageExecute" value="{{ inputMessageExecute }}">
+
+                
+                <div class="whatsapp_broadcast_input_select">
+                    <label>Select All:</label>
+                    <input type="checkbox" id="selectAll">
+                </div>
+                <div class="whatsapp_broadcast_input_send">
+                    <button type="submit" width="100%">Send Whatsapp</button>
+                </div>
+                <br>
+                <div class="whatsapp_recipients">
+                    <table id="customerTable" border="1">
+                        <tr bgcolor="#696969" style="color: white;">
+                            <td><b>Select</b></td>
+                            <td><b>ID</b></td>
+                            <td><b>Name</b></td>
+                            <td><b>Address</b></td>
+                            <td><b>Daerah</b></td>
+                            <td><b>Location</b></td>
+                            <td><b>PIC</b></td>
+                            <td><b>Phone Number</b></td>
+                            <td><b>Master List</b></td>
+                            <td><b>Invoice Date</b></td>
+                            <td><b>Due Date</b></td>
+                            <td><b>Delivery Date</b></td>
+                            <td><b>Complete Date</b></td>
+                            <td><b>Last Order</b></td>
+                            <td><b>Payment Type</b></td>
+                            <td><b>Payment Details</b></td>
+                            <td><b>Debt</b></td>
+                            <td><b>Raport</b></td>
+                            <td><b>Delivery Date</b></td>
+                            <td><b>Driver Name</b></td>
+                            <td><b>Status</b></td>
+                        </tr>
+                    {% for customer in customers %}
+                    <tr valign="top">
+                        <td bgcolor="#F5DEB3"><input type="checkbox" name="selected_items" value="{{ customer.id }}"></td>
+                        <td bgcolor="#00BFFF">{{ customer.id }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.name|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.address|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.daerah|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.location|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.contact_person|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.no_telp|default:"" }}</td>
+                        <td bgcolor="#00BFFF">{{ customer.master_list_order|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_invoice|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_duedate|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_delivery|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_complete|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_order|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.last_payment|default:"" }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.payment_details|default:"" }}</td>
+                        <td bgcolor="#FA8072">{{ customer.debt|default:"" }}</td>
+                        {% if "Lancar" in customer.raport_string %}
+                        <td bgcolor="#90EE90">{{ customer.raport_string|default:""}}</td>
+                        {% elif "Terlambat" in customer.raport_string %}
+                        <td bgcolor="#DAA520">{{ customer.raport_string|default:""}}</td>
+                        {% elif "Menunggak" in customer.raport_string %}
+                        <td bgcolor="#CD5C5C">{{ customer.raport_string|default:""}}</td>
+                        {% elif "Waiting" in customer.raport_string %}
+                        <td bgcolor="#00BFFF">{{ customer.raport_string|default:""}}</td>
+                        {% else %}
+                        <td bgcolor="#FFFFFF">{{ customer.raport_string|default:""}}</td>
+                        {% endif %}
+                        <td bgcolor="#FFFFFF">{{ customer.delivery_date }}</td>
+                        <td bgcolor="#FFFFFF">{{ customer.driver_name }}</td>
+                        <td bgcolor="#48D1CC">{{ customer.status_id|default:"" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td>No posts available.</td></tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer></footer>
+</body>
+<script>
+    $(function () {
+        $("#nav-placeholder").load('/static/master/nav.html');
+    });
+
+    $(document).ready(function() {
+    // Event handler for the auto-check button
+    $('#autoCheckButton').click(function() {
+        // Get all the checkboxes in the table
+        var checkboxes = $('#customerTable').find('input[type="checkbox"]');
+        
+        // Check all checkboxes
+        checkboxes.prop('checked', true);
+    });
+
+    // Event handler for the select all checkbox
+    $('#selectAll').change(function() {
+        // Get all the checkboxes in the table
+        var checkboxes = $('#customerTable').find('input[type="checkbox"]');
+        
+        // Check or uncheck all checkboxes based on the select all checkbox
+        checkboxes.prop('checked', $(this).is(':checked'));
+    });
+    });
+</script>
+
+</html>
+

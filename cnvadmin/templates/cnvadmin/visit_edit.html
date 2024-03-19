@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visit List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>
+    <form method="POST" action="{% url 'visit_edit_execute' %}">            
+    {% csrf_token %}
+    <input type=hidden name="Id" value="{{ visit.id }}">   
+    <table border="2">
+        <tr>
+            <td colspan="2" align="center">Visits</td>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td bgcolor="#F5DEB3">{{visit.date}}</td>
+        </tr>
+        <tr>
+            <td>Customer Code</td>
+            <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.customerCode }}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.pic }}</td>
+        </tr>
+        <tr>
+            <td>Address</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.address }}</td>
+        </tr>
+        <tr>
+            <td>Area</td>
+            <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.area }}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.phone }}</td>
+        </tr>
+        <tr>
+            <td>Invoice</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_invoice }}</td>
+        </tr>
+        <tr>
+            <td>DueDate</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_duedate }}</td>
+        </tr>
+        <tr>
+            <td>Delivery Date</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_delivery }}</td>
+        </tr>
+        <tr>
+            <td>Complete Date</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_complete }}</td>
+        </tr>
+        <tr>
+            <td>Last Order</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_order }}</td>
+        </tr>
+        <tr>
+            <td>Payment Method</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_payment }}</td>
+        </tr>
+        <tr>
+            <td>Payment Details</td>
+            <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.payment_details }}</td>
+        </tr>
+        <tr>
+            <td>Debt</td>
+            <td bgcolor="#FA8072" style="font-size: 14px;">{{ visit.debt }}</td>
+        </tr>
+        <tr>
+            <td>Raport</td>    
+            {% if "Lancar" in visit.raport %}
+            <td bgcolor="#90EE90" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+            {% elif "Terlambat" in visit.raport %}
+            <td bgcolor="#DAA520" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+            {% elif "Menunggak" in visit.raport %}
+            <td bgcolor="#CD5C5C" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+            {% else %}
+            <td bgcolor="white" style="font-size: 14px;">No Raport</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>Note</td>
+            <td bgcolor="#DDA0DD" style="font-size: 14px;">{{ visit.note }}</td>
+        </tr>
+        <tr>
+            <td>CheckIn</td>
+            <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.isCheckIn }}</td>
+        </tr>
+        <tr>
+            <td>Time</td>
+            <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.checkInTime }}</td>
+        </tr>
+        <tr>
+            <td>Location</td>
+            <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.checkInLocation }}</td>
+        </tr>
+        <tr>
+            <td>Checkout</td>
+            <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.isCheckOut }}</td>
+        </tr>
+        <tr>
+            <td>Time</td>
+            <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.checkOutTime }}</td>
+        </tr>
+        <tr>
+            <td>Location</td>
+            <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.checkOutLocation }}</td>
+        </tr>
+        <tr>
+            <td>Master Location</td>
+            <td><input type="text" name="masterLocation" value="{{visit.location}}"></td>
+        </tr>
+        <tr>
+            <td>Assignment</td>
+            <td>
+                <select name="canvasser_id">
+                {%for email in users%}
+                        <option value="{{email}}" {% if visit.user_id == email %} selected {% endif %}>{{ email }}</option>
+                {%endfor%}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%">Submit</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

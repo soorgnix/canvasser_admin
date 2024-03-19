@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>newcustomer List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+  <br><br>
+    <form method="POST" action="{% url 'newcustomer_edit_execute' %}">            
+    {% csrf_token %}
+    <input type=hidden name="Id" value="{{ newcustomer.id }}">
+    <table border="2">
+        <tr>
+            <td colspan="2" align="center">new customers</td>
+        </tr>
+        <tr>
+            <td>Added Date</td>
+            <td>{{newcustomer.addedDate}}</td>
+        </tr>
+        <tr>
+            <td>Update Date</td>
+            <td>{{newcustomer.updateDate}}</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>{{newcustomer.name}}</td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td>{{newcustomer.address}}</td>
+        </tr>
+        <tr>
+            <td>PIC</td>
+            <td>{{newcustomer.pic}}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td>{{newcustomer.phone}}</td>
+        </tr>
+        <tr>
+            <td>User</td>
+            <td>{{newcustomer.user_id}}</td>
+        </tr>
+        <tr>
+            <td>Added Flag</td>
+            <td>
+                <select name="added">
+                    <option value="true" {% if newcustomer.added == true %} selected {% endif %}>true</option>
+                    <option value="false" {% if newcustomer.added == false %} selected {% endif %}>false</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Note</td>
+            <td><input type="textarea" name="note" value="{{newcustomer.note}}"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%">Submit</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

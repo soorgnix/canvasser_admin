@@ -1,0 +1,317 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visit List</title>
+</head>
+<body>
+    <a href="/customer">customer</a>
+    <a href="/customer_map">customer map</a>
+    <a href="/visit">visit</a>    
+    <a href="/map">map</a>
+    <a href="/newcustomer">newcustomer</a>
+    <a href="/newcustomer_map">newcustomer map</a>
+    <a href="/reports">report</a>
+    <a href="/users">users</a>
+    <a href="/visit_bulk_delete">visit bulk delete</a>
+
+    <br><br>
+    <form method="POST" action="{% url 'visit_list' %}">    
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>Visits</td>
+            <td><input type="date" name="dateFilter" value="{{visitFilter.dateFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Customer Code</td>
+            <td><input type="textbox" name="customerCodeFilter" value="{{visitFilter.customerCodeFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td><input type="textbox" name="nameFilter" value="{{visitFilter.nameFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td><input type="textbox" name="addressFilter" value="{{visitFilter.addressFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Daerah</td>
+            <td><input type="textbox" name="daerahFilter" value="{{visitFilter.daerahFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Area</td>
+            <td><input type="textbox" name="areaFilter" value="{{visitFilter.areaFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><input type="textbox" name="picFilter" value="{{visitFilter.picFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Invoice Date</td>
+            <td><input type="date" name="invoiceDateFilter" value="{{visitFilter.invoiceDateFilter}}"> to <input type="date" name="invoiceDateToFilter" value="{{visitFilter.invoiceDateToFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Due Date</td>
+            <td><input type="date" name="dueDateFilter" value="{{visitFilter.dueDateFilter}}"> to <input type="date" name="dueDateToFilter" value="{{visitFilter.dueDateToFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Delivery Date</td>
+            <td><input type="date" name="deliveryDateFilter" value="{{visitFilter.delivertDateFilter}}"> to <input type="date" name="deliveryDateToFilter" value="{{visitFilter.delivertDateToFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Complete Date</td>
+            <td><input type="date" name="completeDateFilter" value="{{visitFilter.completeDateFilter}}"> to <input type="date" name="completeDateToFilter" value="{{visitFilter.completeDateToFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Last Order</td>
+            <td><input type="textbox" name="lastOrderFilter" value="{{visitFilter.lastOrderFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Payment Type</td>
+            <td><input type="textbox" name="paymentTypeFilter" value="{{visitFilter.paymentTypeFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Payment Details</td>
+            <td><input type="textbox" name="paymentDetailsFilter" value="{{visitFilter.paymentDetailsFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Debt</td>
+            <td><input type="textbox" name="debtFilter" value="{{visitFilter.debtFilter}}"></td>
+        </tr>
+        <tr>
+            <td>Raport</td>
+            <td>
+                <select name="raportFilter">
+                    <option value="all" {% if visitFilter.raportFilter == "all" %}selected{% endif %}>All</option>
+                    <option value="lancar" {% if visitFilter.raportFilter == "lancar" %}selected{% endif %}>Lancar</option>
+                    <option value="terlambat" {% if visitFilter.raportFilter == "terlambat" %}selected{% endif %}>Terlambat</option>
+                    <option value="menunggak" {% if visitFilter.raportFilter == "menunggak" %}selected{% endif %}>Menunggak</option>
+                    <option value="in order" {% if visitFilter.raportFilter == "in order" %}selected{% endif %}>In Order</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Assignment</td>
+            <td>
+              <select name="userFilter">
+                <option value="">All</option>
+                {% for user in assignment %}
+                  <option value="{{ user }}" {% if visitFilter.userFilter == user %}selected{% endif %}>{{ user }}</option>
+                {% endfor %}
+              </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Note</td>
+            <td><input type="textbox" name="noteFilter" value="{{visitFilter.noteFilter}}"></td>
+        </tr>        
+        <tr>
+            <td>CheckIn</td>
+            <td>
+                <select name="checkInFilter">
+                    <option value="all" {% if visitFilter.checkInFilter == "all" %}selected{% endif %}>all</option>
+                    <option value="true" {% if visitFilter.checkInFilter == "true" %}selected{% endif %}>true</option>
+                    <option value="false" {% if visitFilter.checkInFilter == "false" %}selected{% endif %}>false</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>CheckOut</td>
+            <td>
+                <select name="checkOutFilter">
+                    <option value="all" {% if visitFilter.checkOutFilter == "all" %}selected{% endif %}>all</option>
+                    <option value="true" {% if visitFilter.checkOutFilter == "true" %}selected{% endif %}>true</option>
+                    <option value="false" {% if visitFilter.checkOutFilter == "false" %}selected{% endif %}>false</option>
+                </select>
+            </td>
+        </tr>  
+        <tr>
+            <td>Distance</td>
+            <td>
+                <select name="distanceFilter">
+                    <option value="all" {% if visitFilter.distanceFilter == "all" %}selected{% endif %}>all</option>
+                    <option value="out" {% if visitFilter.distanceFilter == "out" %}selected{% endif %}>out</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Skip</td>
+            <td>
+                <select name="skipFilter">
+                    <option value="all" {% if visitFilter.skipFilter == "all" %}selected{% endif %}>all</option>
+                    <option value="true" {% if visitFilter.skipFilter == "true" %}selected{% endif %}>true</option>
+                    <option value="false" {% if visitFilter.skipFilter == "false" %}selected{% endif %}>false</option>
+                </select>
+            </td>
+        </tr>  
+        <tr>
+            <td>Sort By</td>
+            <td>                
+                <select name="sortFilter">
+                    <option value="customerCode" {% if visitFilter.sortFilter == "customerCode" %}selected{% endif %}>ID</option>
+                    <option value="pic" {% if visitFilter.sortFilter == "pic" %}selected{% endif %}>Name</option>
+                    <option value="address" {% if visitFilter.sortFilter == "address" %}selected{% endif %}>Address</option>
+                    <option value="daerah" {% if visitFilter.sortFilter == "daerah" %}selected{% endif %}>Daerah</option>
+                    <option value="area" {% if visitFilter.sortFilter == "area" %}selected{% endif %}>Area</option>
+                    <option value="phone" {% if visitFilter.sortFilter == "phone" %}selected{% endif %}>Phone</option>
+                    <option value="invoice_date" {% if visitFilter.sortFilter == "invoice_date" %}selected{% endif %}>Invoice Date</option>
+                    <option value="due_date" {% if visitFilter.sortFilter == "due_date" %}selected{% endif %}>Due Date</option>
+                    <option value="delivery_date" {% if visitFilter.sortFilter == "delivery_date" %}selected{% endif %}>Delivery Date</option>
+                    <option value="complete_date" {% if visitFilter.sortFilter == "complete_date" %}selected{% endif %}>Complete Date</option>
+                    <option value="payment_type" {% if visitFilter.sortFilter == "payment_type" %}selected{% endif %}>Payment Type</option>
+                    <option value="payment_details" {% if visitFilter.sortFilter == "payment_details" %}selected{% endif %}>Payment Details</option>
+                    <option value="debt" {% if visitFilter.sortFilter == "debt" %}selected{% endif %}>Debt</option>
+                    <option value="raport" {% if visitFilter.sortFilter == "raport" %}selected{% endif %}>Raport</option>
+                    <option value="user_id" {% if visitFilter.sortFilter == "user_id" %}selected{% endif %}>Assignment</option>
+                    <option value="note" {% if visitFilter.sortFilter == "note" %}selected{% endif %}>Note</option>
+                    <option value="isCheckIn" {% if visitFilter.sortFilter == "isCheckIn" %}selected{% endif %}>CheckIn</option>
+                    <option value="checkInTime" {% if visitFilter.sortFilter == "checkInTime" %}selected{% endif %}>CheckIn Time</option>
+                    <option value="checkInLocation" {% if visitFilter.sortFilter == "checkInLocation" %}selected{% endif %}>CheckIn Location</option>
+                    <option value="checkInDistance" {% if visitFilter.sortFilter == "checkInDistance" %}selected{% endif %}>CheckIn Distance</option>
+                    <option value="isCheckOut" {% if visitFilter.sortFilter == "isCheckOut" %}selected{% endif %}>CheckOut</option>
+                    <option value="checkOutTime" {% if visitFilter.sortFilter == "checkOutTime" %}selected{% endif %}>CheckOut Time</option>
+                    <option value="checkOutLocation" {% if visitFilter.sortFilter == "checkOutLocation" %}selected{% endif %}>CheckOut Location</option>
+                    <option value="checkOutDistance" {% if visitFilter.sortFilter == "checkOutDistance" %}selected{% endif %}>CheckOut Distance</option>
+                    <option value="isSkip" {% if visitFilter.sortFilter == "isSkip" %}selected{% endif %}>Skip</option>
+                    <option value="skipTime" {% if visitFilter.sortFilter == "skipTime" %}selected{% endif %}>Skip Time</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Sort By Type</td>
+            <td>                
+                <select name="sortTypeFilter">
+                    <option value="asc" {% if visitFilter.sortTypeFilter == "asc" %}selected{% endif %}>Asc</option>
+                    <option value="desc" {% if visitFilter.sortTypeFilter == "desc" %}selected{% endif %}>Desc</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" width="100%" name="action" value="filter">Filter</button></td>
+        </tr>
+    </table>
+    </form>
+    <br>    
+    <label>Select All:</label>
+    <input type="checkbox" id="selectAll">
+    <form method="POST" action="{% url 'set_location' %}">
+    {% csrf_token %}
+    <button type="submit">Set Location</button>
+    <h1>Visit List</h1>
+    <table border="1" id="visitTable">
+        <tr bgcolor="#696969" style="color: white;">
+            <td><b>Set Location</b></td>
+            <td><b>ID</b></td>
+            <td><b>Name</b></td>
+            <td><b>Address</b></td>
+            <td><b>Daerah</b></td>
+            <td><b>Area</b></td>
+            <td><b>Phone</b></td>
+            <td><b>Invoice Date</b></td>
+            <td><b>Due Date Date</b></td>
+            <td><b>Delivery Date</b></td>
+            <td><b>Complete Date</b></td>
+            <td><b>Last Order</b></td>
+            <td><b>Payment Type</b></td>
+            <td><b>Payment Details</b></td>
+            <td><b>Debt</b></td>
+            <td><b>Raport</b></td>
+            <td><b>Assignment</b></td>
+            <td><b>Note</b></td>
+            <td><b>CheckIn</b></td>
+            <td><b>Time</b></td>
+            <td><b>Location</b></td>
+            <td><b>Distance</b></td>
+            <td><b>CheckOut</b></td>
+            <td><b>Time</b></td>
+            <td><b>Location</b></td>
+            <td><b>Distance</b></td>
+            <td><b>Skip</b></td>
+            <td><b>Time</b></td>
+            <td><b>Master Location</b></td>
+            <td><b>Edit</b></td>
+            <td><b>Delete</b></td>
+        </tr>
+        {% for visit in visits %}
+    <tr valign="top">
+        <input type=hidden name="Id" value="{{ visit.id }}">
+        <td bgcolor="#A9A9A9"><input type="checkbox" name="selected_items" value="{{ visit.id }}"></td>        
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.customerCode }}</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.pic }}</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.address }}</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.daerah }}</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.master_list_order }}</td>
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.phone }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_invoice }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_duedate }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_delivery }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_complete }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_order }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.last_payment }}</td>
+        <td bgcolor="#48D1CC" style="font-size: 14px;">{{ visit.payment_details }}</td>
+        <td bgcolor="#FA8072" style="font-size: 14px;">{{ visit.debt }}</td>
+        {% if "Lancar" in visit.raport %}
+        <td bgcolor="#90EE90" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+        {% elif "Terlambat" in visit.raport %}
+        <td bgcolor="#DAA520" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+        {% elif "Menunggak" in visit.raport %}
+        <td bgcolor="#CD5C5C" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+        {% elif "Waiting" in visit.raport %}
+        <td bgcolor="#00BFFF" style="font-size: 14px;">{{ visit.raport|default:""}}</td>
+        {% else %}
+        <td bgcolor="white" style="font-size: 14px;">No Raport</td>
+        {% endif %}
+        <td bgcolor="#DDA0DD" style="font-size: 14px;">{{ visit.user_id }}</td>
+        <td bgcolor="#DDA0DD" style="font-size: 14px;">{{ visit.note }}</td>
+        <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.isCheckIn }}</td>
+        <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.checkInTime }}</td>
+        <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.checkInLocation }}</td>
+        {% if visit.checkInDistance > MAX_DISTANCE %}
+        <td bgcolor="#800000" style="font-size: 14px;">{{ visit.checkInDistance }}</td>
+        {% else %}
+        <td bgcolor="#6495ED" style="font-size: 14px;">{{ visit.checkInDistance }}</td>
+        {% endif %}
+        <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.isCheckOut }}</td>
+        <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.checkOutTime }}</td>
+        <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.checkOutLocation }}</td>
+        {% if visit.checkOutDistance > MAX_DISTANCE %}
+        <td bgcolor="#800000" style="font-size: 14px;">{{ visit.checkOutDistance }}</td>
+        {% else %}
+        <td bgcolor="#98FB98" style="font-size: 14px;">{{ visit.checkOutDistance }}</td>
+        {% endif %}
+        <td bgcolor="#4F8F8F" style="font-size: 14px;">{{ visit.isSkip }}</td>
+        <td bgcolor="#4F8F8F" style="font-size: 14px;">{{ visit.skipTime }}</td>
+        <td bgcolor="#4F8F8F" style="font-size: 14px;">{{ visit.location }}</td>
+        <td bgcolor="#A9A9A9" style="font-size: 14px;"><a href="/visit/edit?id={{visit.id}}">Edit</a></td>
+        <td bgcolor="#A9A9A9" style="font-size: 14px;"><a href="/visit/delete?id={{visit.id}}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <tr><td>No posts available.</td></tr>
+    {% endfor %}
+    </table>
+</form>
+</body>
+</html>
+
+<script>
+    $(document).ready(function() {
+      // Event handler for the auto-check button
+      $('#autoCheckButton').click(function() {
+        // Get all the checkboxes in the table
+        var checkboxes = $('#visitTable').find('input[type="checkbox"]');
+        
+        // Check all checkboxes
+        checkboxes.prop('checked', true);
+      });
+    
+      // Event handler for the select all checkbox
+      $('#selectAll').change(function() {
+        // Get all the checkboxes in the table
+        var checkboxes = $('#visitTable').find('input[type="checkbox"]');
+        
+        // Check or uncheck all checkboxes based on the select all checkbox
+        checkboxes.prop('checked', $(this).is(':checked'));
+      });
+    });
+</script>

@@ -1,0 +1,26 @@
+* {
+    box-sizing: border-box;
+}
+
+nav {
+    background-color: steelblue;
+    color: white;
+    display: flex;
+    text-align: center;
+    border-radius:10px 10px 10px 10px;
+    justify-content: center;
+    margin:10px 10px 10px 10px;
+    width:99%;
+    overflow: hidden;
+    font-weight: bold;
+}
+nav a {
+    text-size-adjust: 150%;
+    text-decoration: none;
+    font-weight: none;
+    color: white;
+}
+nav a:hover {
+    color:lightblue;
+    font-weight: bold;
+}
