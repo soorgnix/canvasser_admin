@@ -6,6 +6,7 @@ from cnvadmin.utils.DBQueryIndex import DBQueryIndex
 from cnvadmin.utils.DBUtils import DBUtils
 from cnvadmin.utils.FireStoreUtils import FireStoreUtils
 import pywhatkit
+from ..dto.CustomersDto import customerFilterDto
 
 
 def whatsapp_view(request):    
@@ -38,6 +39,242 @@ def whatsapp_view(request):
     inactiveRecords = cur.fetchall()
 
     customers = DBUtils.GetCustomerList(records, itemRecords, debtRecords, paymentDetailsRecords, inactiveRecords, locationDataDict)
+    customers = filter(lambda x: len(x.no_telp) > 8, customers)
+
+    id_filter = request.POST.get('idFilter')
+    if id_filter:
+        customers = filter(lambda x: int(id_filter) == x.id, customers)
+
+    name_filter = request.POST.get('nameFilter')
+    if name_filter:
+        customers = filter(lambda x: name_filter in x.name.lower(), customers)
+
+    address_filter = request.POST.get('addressFilter')
+    if address_filter:
+        customers = filter(lambda x: address_filter in x.address.lower(), customers)
+
+    daerah_filter = request.POST.get('daerahFilter')
+    if daerah_filter:
+        customers = filter(lambda x: daerah_filter in x.daerah.lower(), customers)
+
+    pic_filter = request.POST.get('picFilter')
+    if pic_filter:
+        customers = filter(lambda x: pic_filter in x.contact_person.lower(), customers)
+
+    phone_filter = request.POST.get('phoneFilter')
+    if phone_filter:
+        customers = filter(lambda x: phone_filter in x.phone.lower(), customers)
+
+    master_list_filter = request.POST.get('masterlistFilter')
+    if master_list_filter:
+        customers = filter(lambda x: master_list_filter in x.master_list.lower(), customers)
+
+    invoice_date_filter = request.POST.get('invoiceDateFilter')
+    invoice_date_to_filter = request.POST.get('invoiceDateToFilter')
+    if invoice_date_filter and invoice_date_to_filter:
+        customers = filter(lambda x: x.last_invoice >= invoice_date_filter and x.last_invoice <= invoice_date_to_filter, customers)
+
+    due_date_filter = request.POST.get('dueDateFilter')
+    due_date_to_filter = request.POST.get('dueDateToFilter')
+    if due_date_filter and due_date_to_filter:
+        customers = filter(lambda x: x.last_duedate >= due_date_filter and x.last_duedate <= due_date_to_filter, customers)
+
+    delivery_date_filter = request.POST.get('deliveryDateFilter')
+    delivery_date_to_filter = request.POST.get('deliveryDateToFilter')
+    if delivery_date_filter and delivery_date_to_filter:
+        customers = filter(lambda x: x.last_delivery >= delivery_date_filter and x.last_delivery <= delivery_date_to_filter, customers)
+
+    complete_date_filter = request.POST.get('completeDateFilter')
+    complete_date_to_filter = request.POST.get('completeDateToFilter')
+    if complete_date_filter and complete_date_to_filter:
+        customers = filter(lambda x: x.last_complete >= complete_date_filter and x.complete_invoice <= complete_date_to_filter, customers)
+
+    last_order_filter = request.POST.get('lastOrderFilter')
+    if last_order_filter:
+        customers = filter(lambda x: last_order_filter in x.last_order.lower(), customers)
+    
+    payment_type_filter = request.POST.get('paymentTypeFilter')
+    if payment_type_filter:
+        customers = filter(lambda x: payment_type_filter in x.last_payment.lower(), customers)
+
+    payment_details_filter = request.POST.get('paymentDetailsFilter')
+    if payment_details_filter:
+        customers = filter(lambda x: payment_details_filter in x.payment_details.lower(), customers)
+
+    debt_filter = request.POST.get('debtFilter')
+    if debt_filter:
+        customers = filter(lambda x: debt_filter in x.debt.lower(), customers)
+
+    status_filter = request.POST.get('statusFilter')
+    if status_filter:
+        customers = filter(lambda x: status_filter in x.status_id.lower(), customers)
+
+    raport_filter = request.POST.get('raportFilter')
+    if raport_filter and raport_filter != 'all':
+        customers = filter(lambda x: raport_filter in x.raport.lower(), customers)
+
+    delivery_sheet_date_filter = request.POST.get('deliverySheetDateFilter')
+    delivery_sheet_date_to_filter = request.POST.get('deliverySheetDateToFilter')
+    if delivery_sheet_date_filter and delivery_sheet_date_to_filter:
+        customers = filter(lambda x: x.delivery_date >= delivery_sheet_date_filter and x.delivery_date <= delivery_sheet_date_to_filter, customers)
+
+    driver_name_filter = request.POST.get('driverNameFilter')
+    if driver_name_filter:
+        customers = filter(lambda x: driver_name_filter in x.driver_name.lower(), customers)
+
+    sortType_filter = request.POST.get('sortTypeFilter')
+    sort_filter = request.POST.get('sortFilter')
+    if sort_filter == 'id':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.id)
+        else:
+            customers = sorted(customers, key=lambda x: x.id, reverse=True)
+    elif sort_filter == 'name':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '', reverse=True)
+    elif sort_filter == 'address':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '', reverse=True)
+    elif sort_filter == 'daerah':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '', reverse=True)
+    elif sort_filter == 'contact_person':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '', reverse=True)
+    elif sort_filter == 'no_telp':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '', reverse=True)
+    elif sort_filter == 'master_list':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '', reverse=True)
+    elif sort_filter == 'invoice_date':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min, reverse=True)
+    elif sort_filter == 'due_date':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min, reverse=True)
+    elif sort_filter == 'delivery_date':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min, reverse=True)
+    elif sort_filter == 'complete_date':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min, reverse=True)
+    elif sort_filter == 'payment_type':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '', reverse=True)
+    elif sort_filter == 'payment_details':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.payment_details_sort_first if x.payment_details_sort_first is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.payment_details_sort_last if x.payment_details_sort_last is not None else datetime.min, reverse=True)
+    elif sort_filter == 'debt':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.debt_sort_first if x.debt_sort_first is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.debt_sort_last if x.debt_sort_last is not None else datetime.min, reverse=True)
+    elif sort_filter == 'status':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '', reverse=True)
+    elif sort_filter == 'raport':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: (x.raport.lower(), x.last_count_days) if x.raport is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: (x.raport.lower, x.last_count_days) if x.raport is not None else '', reverse=True)
+    elif sort_filter == 'delivery_sheet_date':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min)
+        else:
+            customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min, reverse=True)
+    elif sort_filter == 'driver_name':
+        if sortType_filter == 'asc':
+            customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '')
+        else:
+            customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '', reverse=True)
+
+    if request.method == 'POST':
+        customerFilter = customerFilterDto(
+            dateFilter= str(datetime.now().date()),
+            idFilter = request.POST.get('addressFilter'),
+            nameFilter = request.POST.get('nameFilter'),
+            addressFilter = request.POST.get('addressFilter'),
+            picFilter = request.POST.get('picFilter'),
+            phoneFilter = request.POST.get('phoneFilter'),
+            daerahFilter = request.POST.get('daerahFilter'),
+            masterlistFilter = request.POST.get('masterlistFilter'),
+            invoiceDateFilter = request.POST.get('invoiceDateFilter'),
+            invoiceDateToFilter = request.POST.get('invoiceDateToFilter'),
+            dueDateFilter = request.POST.get('dueDateFilter'),
+            dueDateToFilter = request.POST.get('dueDateToFilter'),
+            deliveryDateFilter = request.POST.get('deliveryDateFilter'),
+            deliveryDateToFilter = request.POST.get('deliveryDateToFilter'),
+            completeDateFilter = request.POST.get('completeDateFilter'),
+            completeDateToFilter = request.POST.get('completeDateToFilter'),
+            lastOrderFilter = request.POST.get('lastOrderFilter'),
+            paymentTypeFilter = request.POST.get('paymentTypeFilter'),
+            paymentDetailsFilter = request.POST.get('paymentDetailsFilter'),
+            debtFilter = request.POST.get('debtFilter'),
+            statusFilter = request.POST.get('statusFilter'),
+            raportFilter = request.POST.get('raportFilter'),
+            deliverySheetDateFilter= request.POST.get('deliverySheetDateFilter'),
+            deliverySheetDateToFilter= request.POST.get('deliverySheetDateToFilter'),
+            driverNameFilter=request.POST.get('driverNameFilter'),
+            sortTypeFilter = request.POST.get('sortTypeFilter'),
+            sortFilter = request.POST.get('sortFilter'),
+        )
+    else:
+          customerFilter = customerFilterDto(
+            dateFilter=str(datetime.now().date()),
+            idFilter = '',
+            nameFilter = '',
+            addressFilter = '',
+            daerahFilter = '',
+            picFilter = '',
+            phoneFilter = '',
+            masterlistFilter = '',
+            invoiceDateFilter = '',
+            invoiceDateToFilter = '',
+            dueDateFilter = '',
+            dueDateToFilter = '',
+            deliveryDateFilter = '',
+            deliveryDateToFilter = '',
+            completeDateFilter = '',
+            completeDateToFilter = '',
+            lastOrderFilter = '',
+            paymentTypeFilter = '',
+            paymentDetailsFilter = '',
+            debtFilter = '',
+            statusFilter = '',
+            deliverySheetDateFilter= '',
+            deliverySheetDateToFilter= '',
+            driverNameFilter='',
+            raportFilter='all',
+            sortTypeFilter='Asc',
+            sortFilter='master_list'
+        )      
 
     categorySelect = 0
     if request.POST.get('categorySelect') is not None:
@@ -57,7 +294,7 @@ def whatsapp_view(request):
         case 4:
             customers = list(filter(lambda customer: customer.delivery_date != '' and customer.delivery_date != '' and customer.debt != '', customers))
         case _:
-            customers = customers                       
+            customers = list(customers)
 
 
     db = firestore.client()                
@@ -112,7 +349,7 @@ def whatsapp_view(request):
     else:
         currentMessage = ''         
 
-    return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelect, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessage, 'categorySelectExecute':categorySelect})
+    return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelect, 'customerFilter': customerFilter, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessage, 'categorySelectExecute':categorySelect})
 
 def whatsapp_set_message(request):
     if request.method == 'POST':
@@ -145,7 +382,243 @@ def whatsapp_set_message(request):
         inactiveRecords = cur.fetchall()
 
         customers = DBUtils.GetCustomerList(records, itemRecords, debtRecords, paymentDetailsRecords, inactiveRecords, locationDataDict)
+        customers = filter(lambda x: len(x.no_telp) > 8, customers)
 
+        id_filter = request.POST.get('idFilter2')
+        if id_filter:
+            customers = filter(lambda x: int(id_filter) == x.id, customers)
+
+        name_filter = request.POST.get('nameFilter2')
+        if name_filter:
+            customers = filter(lambda x: name_filter in x.name.lower(), customers)
+
+        address_filter = request.POST.get('addressFilter2')
+        if address_filter:
+            customers = filter(lambda x: address_filter in x.address.lower(), customers)
+
+        daerah_filter = request.POST.get('daerahFilter2')
+        if daerah_filter:
+            customers = filter(lambda x: daerah_filter in x.daerah.lower(), customers)
+
+        pic_filter = request.POST.get('picFilter2')
+        if pic_filter:
+            customers = filter(lambda x: pic_filter in x.contact_person.lower(), customers)
+
+        phone_filter = request.POST.get('phoneFilter2')
+        if phone_filter:
+            customers = filter(lambda x: phone_filter in x.phone.lower(), customers)
+
+        master_list_filter = request.POST.get('masterlistFilter2')
+        if master_list_filter:
+            customers = filter(lambda x: master_list_filter in x.master_list.lower(), customers)
+
+        invoice_date_filter = request.POST.get('invoiceDateFilter2')
+        invoice_date_to_filter = request.POST.get('invoiceDateToFilter2')
+        if invoice_date_filter and invoice_date_to_filter:
+            customers = filter(lambda x: x.last_invoice >= invoice_date_filter and x.last_invoice <= invoice_date_to_filter, customers)
+
+        due_date_filter = request.POST.get('dueDateFilter2')
+        due_date_to_filter = request.POST.get('dueDateToFilter2')
+        if due_date_filter and due_date_to_filter:
+            customers = filter(lambda x: x.last_duedate >= due_date_filter and x.last_duedate <= due_date_to_filter, customers)
+
+        delivery_date_filter = request.POST.get('deliveryDateFilter2')
+        delivery_date_to_filter = request.POST.get('deliveryDateToFilter2')
+        if delivery_date_filter and delivery_date_to_filter:
+            customers = filter(lambda x: x.last_delivery >= delivery_date_filter and x.last_delivery <= delivery_date_to_filter, customers)
+
+        complete_date_filter = request.POST.get('completeDateFilter2')
+        complete_date_to_filter = request.POST.get('completeDateToFilter2')
+        if complete_date_filter and complete_date_to_filter:
+            customers = filter(lambda x: x.last_complete >= complete_date_filter and x.complete_invoice <= complete_date_to_filter, customers)
+
+        last_order_filter = request.POST.get('lastOrderFilter2')
+        if last_order_filter:
+            customers = filter(lambda x: last_order_filter in x.last_order.lower(), customers)
+        
+        payment_type_filter = request.POST.get('paymentTypeFilter2')
+        if payment_type_filter:
+            customers = filter(lambda x: payment_type_filter in x.last_payment.lower(), customers)
+
+        payment_details_filter = request.POST.get('paymentDetailsFilter2')
+        if payment_details_filter:
+            customers = filter(lambda x: payment_details_filter in x.payment_details.lower(), customers)
+
+        debt_filter = request.POST.get('debtFilter2')
+        if debt_filter:
+            customers = filter(lambda x: debt_filter in x.debt.lower(), customers)
+
+        status_filter = request.POST.get('statusFilter2')
+        if status_filter:
+            customers = filter(lambda x: status_filter in x.status_id.lower(), customers)
+
+        raport_filter = request.POST.get('raportFilter2')
+        if raport_filter and raport_filter != 'all':
+            customers = filter(lambda x: raport_filter in x.raport.lower(), customers)
+
+        delivery_sheet_date_filter = request.POST.get('deliverySheetDateFilter2')
+        delivery_sheet_date_to_filter = request.POST.get('deliverySheetDateToFilter2')
+        if delivery_sheet_date_filter and delivery_sheet_date_to_filter:
+            customers = filter(lambda x: x.delivery_date >= delivery_sheet_date_filter and x.delivery_date <= delivery_sheet_date_to_filter, customers)
+
+        driver_name_filter = request.POST.get('driverNameFilter2')
+        if driver_name_filter:
+            customers = filter(lambda x: driver_name_filter in x.driver_name.lower(), customers)
+
+        sortType_filter = request.POST.get('sortTypeFilter2')
+        sort_filter = request.POST.get('sortFilter2')
+        if sort_filter == 'id':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.id)
+            else:
+                customers = sorted(customers, key=lambda x: x.id, reverse=True)
+        elif sort_filter == 'name':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '', reverse=True)
+        elif sort_filter == 'address':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '', reverse=True)
+        elif sort_filter == 'daerah':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '', reverse=True)
+        elif sort_filter == 'contact_person':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '', reverse=True)
+        elif sort_filter == 'no_telp':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '', reverse=True)
+        elif sort_filter == 'master_list':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '', reverse=True)
+        elif sort_filter == 'invoice_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min, reverse=True)
+        elif sort_filter == 'due_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min, reverse=True)
+        elif sort_filter == 'delivery_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min, reverse=True)
+        elif sort_filter == 'complete_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min, reverse=True)
+        elif sort_filter == 'payment_type':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '', reverse=True)
+        elif sort_filter == 'payment_details':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.payment_details_sort_first if x.payment_details_sort_first is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.payment_details_sort_last if x.payment_details_sort_last is not None else datetime.min, reverse=True)
+        elif sort_filter == 'debt':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.debt_sort_first if x.debt_sort_first is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.debt_sort_last if x.debt_sort_last is not None else datetime.min, reverse=True)
+        elif sort_filter == 'status':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '', reverse=True)
+        elif sort_filter == 'raport':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: (x.raport.lower(), x.last_count_days) if x.raport is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: (x.raport.lower, x.last_count_days) if x.raport is not None else '', reverse=True)
+        elif sort_filter == 'delivery_sheet_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min, reverse=True)
+        elif sort_filter == 'driver_name':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '', reverse=True)
+
+        if request.method == 'POST':
+            customerFilter = customerFilterDto(
+                dateFilter= str(datetime.now().date()),
+                idFilter = request.POST.get('addressFilter2'),
+                nameFilter = request.POST.get('nameFilter2'),
+                addressFilter = request.POST.get('addressFilter2'),
+                picFilter = request.POST.get('picFilter2'),
+                phoneFilter = request.POST.get('phoneFilter2'),
+                daerahFilter = request.POST.get('daerahFilter2'),
+                masterlistFilter = request.POST.get('masterlistFilter2'),
+                invoiceDateFilter = request.POST.get('invoiceDateFilter2'),
+                invoiceDateToFilter = request.POST.get('invoiceDateToFilter2'),
+                dueDateFilter = request.POST.get('dueDateFilter2'),
+                dueDateToFilter = request.POST.get('dueDateToFilter2'),
+                deliveryDateFilter = request.POST.get('deliveryDateFilter2'),
+                deliveryDateToFilter = request.POST.get('deliveryDateToFilter2'),
+                completeDateFilter = request.POST.get('completeDateFilter2'),
+                completeDateToFilter = request.POST.get('completeDateToFilter2'),
+                lastOrderFilter = request.POST.get('lastOrderFilter2'),
+                paymentTypeFilter = request.POST.get('paymentTypeFilter2'),
+                paymentDetailsFilter = request.POST.get('paymentDetailsFilter2'),
+                debtFilter = request.POST.get('debtFilter2'),
+                statusFilter = request.POST.get('statusFilter2'),
+                raportFilter = request.POST.get('raportFilter2'),
+                deliverySheetDateFilter= request.POST.get('deliverySheetDateFilter2'),
+                deliverySheetDateToFilter= request.POST.get('deliverySheetDateToFilter2'),
+                driverNameFilter=request.POST.get('driverNameFilter2'),
+                sortTypeFilter = request.POST.get('sortTypeFilter2'),
+                sortFilter = request.POST.get('sortFilter2'),
+            )
+        else:
+            customerFilter = customerFilterDto(
+                dateFilter=str(datetime.now().date()),
+                idFilter = '',
+                nameFilter = '',
+                addressFilter = '',
+                daerahFilter = '',
+                picFilter = '',
+                phoneFilter = '',
+                masterlistFilter = '',
+                invoiceDateFilter = '',
+                invoiceDateToFilter = '',
+                dueDateFilter = '',
+                dueDateToFilter = '',
+                deliveryDateFilter = '',
+                deliveryDateToFilter = '',
+                completeDateFilter = '',
+                completeDateToFilter = '',
+                lastOrderFilter = '',
+                paymentTypeFilter = '',
+                paymentDetailsFilter = '',
+                debtFilter = '',
+                statusFilter = '',
+                deliverySheetDateFilter= '',
+                deliverySheetDateToFilter= '',
+                driverNameFilter='',
+                raportFilter='all',
+                sortTypeFilter='Asc',
+                sortFilter='master_list'
+            )    
+        
         categorySelect = 0
         categorySelected = 0
         categorySelectExecute = 0
@@ -168,7 +641,7 @@ def whatsapp_set_message(request):
             case 4:
                 customers = list(filter(lambda customer: customer.delivery_date != '' and customer.debt != '', customers))
             case _:
-                customers = customers   
+                customers = list(customers)
 
         inputMessage = request.POST.get('inputMessage')
 
@@ -229,7 +702,7 @@ def whatsapp_set_message(request):
         else:
             currentMessage = ''         
 
-        return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelected, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessage, 'categorySelectExecute':categorySelected})
+        return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelected, 'customerFilter': customerFilter, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessage, 'categorySelectExecute':categorySelected})
 
 def whatsapp_execute(request):
     if request.method == 'POST':
@@ -262,6 +735,242 @@ def whatsapp_execute(request):
         inactiveRecords = cur.fetchall()
 
         customers = DBUtils.GetCustomerList(records, itemRecords, debtRecords, paymentDetailsRecords, inactiveRecords, locationDataDict)
+        customers = filter(lambda x: len(x.no_telp) > 8, customers)
+
+        id_filter = request.POST.get('idFilter3')
+        if id_filter:
+            customers = filter(lambda x: int(id_filter) == x.id, customers)
+
+        name_filter = request.POST.get('nameFilter3')
+        if name_filter:
+            customers = filter(lambda x: name_filter in x.name.lower(), customers)
+
+        address_filter = request.POST.get('addressFilter3')
+        if address_filter:
+            customers = filter(lambda x: address_filter in x.address.lower(), customers)
+
+        daerah_filter = request.POST.get('daerahFilter3')
+        if daerah_filter:
+            customers = filter(lambda x: daerah_filter in x.daerah.lower(), customers)
+
+        pic_filter = request.POST.get('picFilter3')
+        if pic_filter:
+            customers = filter(lambda x: pic_filter in x.contact_person.lower(), customers)
+
+        phone_filter = request.POST.get('phoneFilter3')
+        if phone_filter:
+            customers = filter(lambda x: phone_filter in x.phone.lower(), customers)
+
+        master_list_filter = request.POST.get('masterlistFilter3')
+        if master_list_filter:
+            customers = filter(lambda x: master_list_filter in x.master_list.lower(), customers)
+
+        invoice_date_filter = request.POST.get('invoiceDateFilter3')
+        invoice_date_to_filter = request.POST.get('invoiceDateToFilter3')
+        if invoice_date_filter and invoice_date_to_filter:
+            customers = filter(lambda x: x.last_invoice >= invoice_date_filter and x.last_invoice <= invoice_date_to_filter, customers)
+
+        due_date_filter = request.POST.get('dueDateFilter3')
+        due_date_to_filter = request.POST.get('dueDateToFilter3')
+        if due_date_filter and due_date_to_filter:
+            customers = filter(lambda x: x.last_duedate >= due_date_filter and x.last_duedate <= due_date_to_filter, customers)
+
+        delivery_date_filter = request.POST.get('deliveryDateFilter3')
+        delivery_date_to_filter = request.POST.get('deliveryDateToFilter3')
+        if delivery_date_filter and delivery_date_to_filter:
+            customers = filter(lambda x: x.last_delivery >= delivery_date_filter and x.last_delivery <= delivery_date_to_filter, customers)
+
+        complete_date_filter = request.POST.get('completeDateFilter3')
+        complete_date_to_filter = request.POST.get('completeDateToFilter3')
+        if complete_date_filter and complete_date_to_filter:
+            customers = filter(lambda x: x.last_complete >= complete_date_filter and x.complete_invoice <= complete_date_to_filter, customers)
+
+        last_order_filter = request.POST.get('lastOrderFilter3')
+        if last_order_filter:
+            customers = filter(lambda x: last_order_filter in x.last_order.lower(), customers)
+        
+        payment_type_filter = request.POST.get('paymentTypeFilter3')
+        if payment_type_filter:
+            customers = filter(lambda x: payment_type_filter in x.last_payment.lower(), customers)
+
+        payment_details_filter = request.POST.get('paymentDetailsFilter3')
+        if payment_details_filter:
+            customers = filter(lambda x: payment_details_filter in x.payment_details.lower(), customers)
+
+        debt_filter = request.POST.get('debtFilter3')
+        if debt_filter:
+            customers = filter(lambda x: debt_filter in x.debt.lower(), customers)
+
+        status_filter = request.POST.get('statusFilter3')
+        if status_filter:
+            customers = filter(lambda x: status_filter in x.status_id.lower(), customers)
+
+        raport_filter = request.POST.get('raportFilter3')
+        if raport_filter and raport_filter != 'all':
+            customers = filter(lambda x: raport_filter in x.raport.lower(), customers)
+
+        delivery_sheet_date_filter = request.POST.get('deliverySheetDateFilter3')
+        delivery_sheet_date_to_filter = request.POST.get('deliverySheetDateToFilter3')
+        if delivery_sheet_date_filter and delivery_sheet_date_to_filter:
+            customers = filter(lambda x: x.delivery_date >= delivery_sheet_date_filter and x.delivery_date <= delivery_sheet_date_to_filter, customers)
+
+        driver_name_filter = request.POST.get('driverNameFilter3')
+        if driver_name_filter:
+            customers = filter(lambda x: driver_name_filter in x.driver_name.lower(), customers)
+        
+        sortType_filter = request.POST.get('sortTypeFilter3')
+        sort_filter = request.POST.get('sortFilter3')
+        if sort_filter == 'id':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.id)
+            else:
+                customers = sorted(customers, key=lambda x: x.id, reverse=True)
+        elif sort_filter == 'name':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.name.lower() if x.name is not None else '', reverse=True)
+        elif sort_filter == 'address':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.address.lower() if x.address is not None else '', reverse=True)
+        elif sort_filter == 'daerah':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.daerah.lower() if x.daerah is not None else '', reverse=True)
+        elif sort_filter == 'contact_person':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.contact_person.lower() if x.contact_person is not None else '', reverse=True)
+        elif sort_filter == 'no_telp':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.no_telp.lower() if x.no_telp is not None else '', reverse=True)
+        elif sort_filter == 'master_list':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.master_list_order.lower() if x.master_list is not None else '', reverse=True)
+        elif sort_filter == 'invoice_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_invoice if x.last_invoice is not None else datetime.min, reverse=True)
+        elif sort_filter == 'due_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_duedate if x.last_duedate is not None else datetime.min, reverse=True)
+        elif sort_filter == 'delivery_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.last_delivery if x.last_delivery is not None else datetime.min, reverse=True)
+        elif sort_filter == 'complete_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: datetime.strptime(x.last_complete, '%Y-%m-%d') if x.last_complete is not None else datetime.min, reverse=True)
+        elif sort_filter == 'payment_type':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.last_payment.lower() if x.last_payment is not None else '', reverse=True)
+        elif sort_filter == 'payment_details':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.payment_details_sort_first if x.payment_details_sort_first is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.payment_details_sort_last if x.payment_details_sort_last is not None else datetime.min, reverse=True)
+        elif sort_filter == 'debt':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.debt_sort_first if x.debt_sort_first is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.debt_sort_last if x.debt_sort_last is not None else datetime.min, reverse=True)
+        elif sort_filter == 'status':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.status_id.lower() if x.status_id is not None else '', reverse=True)
+        elif sort_filter == 'raport':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: (x.raport.lower(), x.last_count_days) if x.raport is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: (x.raport.lower, x.last_count_days) if x.raport is not None else '', reverse=True)
+        elif sort_filter == 'delivery_sheet_date':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min)
+            else:
+                customers = sorted(customers, key=lambda x: x.delivery_date if x.delivery_date is not None else datetime.min, reverse=True)
+        elif sort_filter == 'driver_name':
+            if sortType_filter == 'asc':
+                customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '')
+            else:
+                customers = sorted(customers, key=lambda x: x.driver_name.lower() if x.driver_name is not None else '', reverse=True)
+
+        if request.method == 'POST':
+            customerFilter = customerFilterDto(
+                dateFilter= str(datetime.now().date()),
+                idFilter = request.POST.get('addressFilter3'),
+                nameFilter = request.POST.get('nameFilter3'),
+                addressFilter = request.POST.get('addressFilter3'),
+                picFilter = request.POST.get('picFilter3'),
+                phoneFilter = request.POST.get('phoneFilter3'),
+                daerahFilter = request.POST.get('daerahFilter3'),
+                masterlistFilter = request.POST.get('masterlistFilter3'),
+                invoiceDateFilter = request.POST.get('invoiceDateFilter3'),
+                invoiceDateToFilter = request.POST.get('invoiceDateToFilter3'),
+                dueDateFilter = request.POST.get('dueDateFilter3'),
+                dueDateToFilter = request.POST.get('dueDateToFilter3'),
+                deliveryDateFilter = request.POST.get('deliveryDateFilter3'),
+                deliveryDateToFilter = request.POST.get('deliveryDateToFilter3'),
+                completeDateFilter = request.POST.get('completeDateFilter3'),
+                completeDateToFilter = request.POST.get('completeDateToFilter3'),
+                lastOrderFilter = request.POST.get('lastOrderFilter3'),
+                paymentTypeFilter = request.POST.get('paymentTypeFilter3'),
+                paymentDetailsFilter = request.POST.get('paymentDetailsFilter3'),
+                debtFilter = request.POST.get('debtFilter3'),
+                statusFilter = request.POST.get('statusFilter3'),
+                raportFilter = request.POST.get('raportFilter3'),
+                deliverySheetDateFilter= request.POST.get('deliverySheetDateFilter3'),
+                deliverySheetDateToFilter= request.POST.get('deliverySheetDateToFilter3'),
+                driverNameFilter=request.POST.get('driverNameFilter3'),
+                sortTypeFilter = request.POST.get('sortTypeFilter3'),
+                sortFilter = request.POST.get('sortFilter3'),
+            )
+        else:
+            customerFilter = customerFilterDto(
+                dateFilter=str(datetime.now().date()),
+                idFilter = '',
+                nameFilter = '',
+                addressFilter = '',
+                daerahFilter = '',
+                picFilter = '',
+                phoneFilter = '',
+                masterlistFilter = '',
+                invoiceDateFilter = '',
+                invoiceDateToFilter = '',
+                dueDateFilter = '',
+                dueDateToFilter = '',
+                deliveryDateFilter = '',
+                deliveryDateToFilter = '',
+                completeDateFilter = '',
+                completeDateToFilter = '',
+                lastOrderFilter = '',
+                paymentTypeFilter = '',
+                paymentDetailsFilter = '',
+                debtFilter = '',
+                statusFilter = '',
+                deliverySheetDateFilter= '',
+                deliverySheetDateToFilter= '',
+                driverNameFilter='',
+                raportFilter='all',
+                sortTypeFilter='Asc',
+                sortFilter='master_list'
+            )    
 
         categorySelect = 0
         categorySelected = 0
@@ -285,7 +994,7 @@ def whatsapp_execute(request):
             case 4:
                 customers = list(filter(lambda customer: customer.delivery_date != '' and customer.debt != '', customers))
             case _:
-                customers = customers   
+                customers = list(customers)   
 
         inputMessage = request.POST.get('inputMessageExecute')
         inputMessageExecute = request.POST.get('inputMessageExecute')
@@ -333,12 +1042,13 @@ def whatsapp_execute(request):
                         currentMessage = currentMessage.replace('[master_list_order]', customerItem[0].master_list_order)
                 
                     phone_number = customerItem[0].no_telp
-                    phone_number = "+62895323031823"
+                    phone_number = "0895323031823"
+                    if phone_number[0] == '0':
+                        # Replace the first digit with '+62'
+                        phone_number = '+62' + phone_number[1:]
                     group_id = ''
                     message = currentMessage
-                    time_hour = 14
-                    time_minute = 50
-                    waiting_time_to_send = 15
+                    waiting_time_to_send = 10
                     close_tab = True
                     waiting_time_to_close = 10
 
@@ -346,10 +1056,8 @@ def whatsapp_execute(request):
 
                     if mode == "contact":
                         pywhatkit.sendwhatmsg_instantly(phone_number, message, waiting_time_to_send, True, waiting_time_to_close)
-                    elif mode == "group":
-                        pywhatkit.sendwhatmsg_to_group(group_id, message, time_hour, time_minute, waiting_time_to_send, close_tab, waiting_time_to_close)
                     else:
                         print("Error code: 97654")
                         print("Error Message: Please select a mode to send your message.")
 
-        return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelected, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessageExecute, 'categorySelectExecute':categorySelectExecute})
+        return render(request, 'cnvadmin/whatsapp_list.html', {'customers': customers, 'categorySelect': categorySelect, 'categorySelected': categorySelected, 'customerFilter': customerFilter, 'inputMessage': inputMessage, 'currentMessage': currentMessage, 'inputMessageExecute': inputMessageExecute, 'categorySelectExecute':categorySelectExecute})

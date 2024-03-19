@@ -20,13 +20,134 @@
             <form method="POST" action="{% url 'whatsapp_view' %}">
             {% csrf_token %}
                 <div class="whatsapp_broadcast_input_select">
-                    <select name="categorySelect">
-                        <option value="0">---Please Select---</option>
+                    Category<select name="categorySelect">
+                        <option value="0" {% if categorySelect == 0 %}selected{% endif %}>All</option>
                         <option value="1" {% if categorySelect == 1 %}selected{% endif %}>Belum Order 30 hari terakhir</option>
                         <option value="2" {% if categorySelect == 2 %}selected{% endif %}>Ada Tagihan</option>
                         <option value="3" {% if categorySelect == 3 %}selected{% endif %}>Delivered Cash</option>
                         <option value="4" {% if categorySelect == 4 %}selected{% endif %}>Delivered Tempo</option>
                     </select>
+                    <br><br>
+                    <table>
+                    <tr>
+                        <td>ID</td>
+                        <td><input type="textbox" name="idFilter" value="{{customerFilter.idFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td><input type="textbox" name="nameFilter" value="{{customerFilter.nameFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td><input type="textbox" name="addressFilter" value="{{customerFilter.addressFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Daerah</td>
+                        <td><input type="textbox" name="daerahFilter" value="{{customerFilter.daerahFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>PIC</td>
+                        <td><input type="textbox" name="picFilter" value="{{customerFilter.picFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td><input type="textbox" name="phoneFilter" value="{{customerFilter.phoneFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Master List</td>
+                        <td><input type="textbox" name="masterlistFilter" value="{{customerFilter.masterlistFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Invoice Date</td>
+                        <td><input type="date" name="invoiceDateFilter" value="{{customerFilter.invoiceDateFilter}}"> to <input type="date" name="invoiceDateToFilter" value="{{customerFilter.invoiceDateToFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Due Date</td>
+                        <td><input type="date" name="dueDateFilter" value="{{customerFilter.dueDateFilter}}"> to <input type="date" name="dueDateToFilter" value="{{customerFilter.dueDateToFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Delivery Date</td>
+                        <td><input type="date" name="deliveryDateFilter" value="{{customerFilter.deliveryDateFilter}}"> to <input type="date" name="deliveryDateToFilter" value="{{customerFilter.deliveryDateToFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Complete Date</td>
+                        <td><input type="date" name="completeDateFilter" value="{{customerFilter.completeDateFilter}}"> to <input type="date" name="completeDateToFilter" value="{{customerFilter.completeDateToFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Last Order</td>
+                        <td><input type="textbox" name="lastOrderFilter" value="{{customerFilter.lastOrderFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Payment Type</td>
+                        <td><input type="textbox" name="paymentTypeFilter" value="{{customerFilter.paymentTypeFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Payment Details</td>
+                        <td><input type="textbox" name="paymentDetailsFilter" value="{{customerFilter.paymentDetailsFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Debt</td>
+                        <td><input type="textbox" name="debtFilter" value="{{customerFilter.debtFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td><input type="textbox" name="statusFilter" value="{{customerFilter.statusFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Sheet Delivery Date</td>
+                        <td><input type="date" name="deliverySheetDateFilter" value="{{customerFilter.deliverySheetDateFilter}}"> to <input type="date" name="deliverySheetDateToFilter" value="{{customerFilter.deliverySheetDateToFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Driver Name</td>
+                        <td><input type="textbox" name="driverNameFilter" value="{{customerFilter.driverNameFilter}}"></td>
+                    </tr>
+                    <tr>
+                        <td>Raport</td>
+                        <td>
+                            <select name="raportFilter">
+                                <option value="all" {% if customerFilter.raportFilter == "all" %}selected{% endif %}>All</option>
+                                <option value="lancar" {% if customerFilter.raportFilter == "lancar" %}selected{% endif %}>Lancar</option>
+                                <option value="terlambat" {% if customerFilter.raportFilter == "terlambat" %}selected{% endif %}>Terlambat</option>
+                                <option value="menunggak" {% if customerFilter.raportFilter == "menunggak" %}selected{% endif %}>Menunggak</option>
+                                <option value="in order" {% if customerFilter.raportFilter == "in order" %}selected{% endif %}>In Order</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort By</td>
+                        <td>                
+                            <select name="sortFilter">
+                                <option value="id" {% if customerFilter.sortFilter == "id" %}selected{% endif %}>ID</option>
+                                <option value="name" {% if customerFilter.sortFilter == "name" %}selected{% endif %}>Name</option>
+                                <option value="address" {% if customerFilter.sortFilter == "address" %}selected{% endif %}>Address</option>
+                                <option value="daerah" {% if customerFilter.sortFilter == "daerah" %}selected{% endif %}>Daerah</option>
+                                <option value="contact_person" {% if customerFilter.sortFilter == "contact_person" %}selected{% endif %}>PIC</option>
+                                <option value="no_telp" {% if customerFilter.sortFilter == "no_telp" %}selected{% endif %}>Phone</option>
+                                <option value="master_list" {% if customerFilter.sortFilter == "master_list" %}selected{% endif %}>Master List</option>
+                                <option value="invoice_date" {% if customerFilter.sortFilter == "invoice_date" %}selected{% endif %}>Invoice Date</option>
+                                <option value="due_date" {% if customerFilter.sortFilter == "due_date" %}selected{% endif %}>Due Date</option>
+                                <option value="delivery_date" {% if customerFilter.sortFilter == "delivery_date" %}selected{% endif %}>Delivery Date</option>
+                                <option value="complete_date" {% if customerFilter.sortFilter == "complete_date" %}selected{% endif %}>Complete Date</option>
+                                <option value="payment_type" {% if customerFilter.sortFilter == "payment_type" %}selected{% endif %}>Payment Type</option>
+                                <option value="payment_details" {% if customerFilter.sortFilter == "payment_details" %}selected{% endif %}>Payment Details</option>
+                                <option value="debt" {% if customerFilter.sortFilter == "debt" %}selected{% endif %}>Debt</option>
+                                <option value="status" {% if customerFilter.sortFilter == "status" %}selected{% endif %}>Status</option>
+                                <option value="raport" {% if customerFilter.sortFilter == "raport" %}selected{% endif %}>Raport</option>
+                                <option value="delivery_sheet_date" {% if customerFilter.sortFilter == "delivery_sheet_date" %}selected{% endif %}>Delivery Sheet Date</option>
+                                <option value="driver_name" {% if customerFilter.sortFilter == "driver_name" %}selected{% endif %}>Driver Name</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort By Type</td>
+                        <td>                
+                            <select name="sortTypeFilter">
+                                <option value="asc" {% if visitFilter.sortTypeFilter == "asc" %}selected{% endif %}>Asc</option>
+                                <option value="desc" {% if visitFilter.sortTypeFilter == "desc" %}selected{% endif %}>Desc</option>
+                            </select>
+                        </td>
+                    </tr> 
+                    </table>   
                     <button type="submit" width="100%">Filter</button>
                 </div>
             </form>
@@ -34,6 +155,32 @@
             <form method="POST" action="{% url 'whatsapp_set_message' %}">
             {% csrf_token %}
                 <input type="hidden" name="categorySelected" value="{{ categorySelect }}">
+                <input type="hidden" name="idFilter2" value="{{customerFilter.idFilter}}">
+                <input type="hidden" name="nameFilter2" value="{{customerFilter.nameFilter}}">
+                <input type="hidden" name="addressFilter2" value="{{customerFilter.addressFilter}}">
+                <input type="hidden" name="daerahFilter2" value="{{customerFilter.daerahFilter}}">
+                <input type="hidden" name="picFilter2" value="{{customerFilter.picFilter}}">
+                <input type="hidden" name="phoneFilter2" value="{{customerFilter.phoneFilter}}">
+                <input type="hidden" name="masterlistFilter2" value="{{customerFilter.masterlistFilter}}">
+                <input type="hidden" name="invoiceDateFilter2" value="{{customerFilter.invoiceDateFilter}}"> 
+                <input type="hidden" name="invoiceDateToFilter2" value="{{customerFilter.invoiceDateToFilter}}">
+                <input type="hidden" name="dueDateFilter2" value="{{customerFilter.dueDateFilter}}"> 
+                <input type="hidden" name="dueDateToFilter2" value="{{customerFilter.dueDateToFilter}}">
+                <input type="hidden" name="deliveryDateFilter2" value="{{customerFilter.deliveryDateFilter}}">
+                <input type="hidden" name="deliveryDateToFilter2" value="{{customerFilter.deliveryDateToFilter}}">
+                <input type="hidden" name="completeDateFilter2" value="{{customerFilter.completeDateFilter}}">
+                <input type="hidden" name="completeDateToFilter2" value="{{customerFilter.completeDateToFilter}}">
+                <input type="hidden" name="lastOrderFilter2" value="{{customerFilter.lastOrderFilter}}">
+                <input type="hidden" name="paymentTypeFilter2" value="{{customerFilter.paymentTypeFilter}}">
+                <input type="hidden" name="paymentDetailsFilter2" value="{{customerFilter.paymentDetailsFilter}}">
+                <input type="hidden" name="debtFilter2" value="{{customerFilter.debtFilter}}">
+                <input type="hidden" name="statusFilter2" value="{{customerFilter.statusFilter}}">
+                <input type="hidden" name="deliverySheetDateFilter2" value="{{customerFilter.deliverySheetDateFilter}}"> 
+                <input type="hidden" name="deliverySheetDateToFilter2" value="{{customerFilter.deliverySheetDateToFilter}}">
+                <input type="hidden" name="driverNameFilter2" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="raportFilter2" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="sortFilter2" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="sortTypeFilter2" value="{{customerFilter.driverNameFilter}}">
                 <div class="whatsapp_broadcast_input_message">
                     <h3>Message Format</h3>
                     <textarea name="inputMessage" style="width: 500px; height: 100px;">{{ inputMessage }}</textarea>                    
@@ -46,7 +193,32 @@
             {% csrf_token %}
                 <input type="hidden" name="categorySelectExecute" value="{{ categorySelectExecute }}">
                 <input type="hidden" name="inputMessageExecute" value="{{ inputMessageExecute }}">
-
+                <input type="hidden" name="idFilter3" value="{{customerFilter.idFilter}}">
+                <input type="hidden" name="nameFilter3" value="{{customerFilter.nameFilter}}">
+                <input type="hidden" name="addressFilter3" value="{{customerFilter.addressFilter}}">
+                <input type="hidden" name="daerahFilter3" value="{{customerFilter.daerahFilter}}">
+                <input type="hidden" name="picFilter3" value="{{customerFilter.picFilter}}">
+                <input type="hidden" name="phoneFilter3" value="{{customerFilter.phoneFilter}}">
+                <input type="hidden" name="masterlistFilter3" value="{{customerFilter.masterlistFilter}}">
+                <input type="hidden" name="invoiceDateFilter3" value="{{customerFilter.invoiceDateFilter}}"> 
+                <input type="hidden" name="invoiceDateToFilter3" value="{{customerFilter.invoiceDateToFilter}}">
+                <input type="hidden" name="dueDateFilter3" value="{{customerFilter.dueDateFilter}}"> 
+                <input type="hidden" name="dueDateToFilter3" value="{{customerFilter.dueDateToFilter}}">
+                <input type="hidden" name="deliveryDateFilter3" value="{{customerFilter.deliveryDateFilter}}">
+                <input type="hidden" name="deliveryDateToFilter3" value="{{customerFilter.deliveryDateToFilter}}">
+                <input type="hidden" name="completeDateFilter3" value="{{customerFilter.completeDateFilter}}">
+                <input type="hidden" name="completeDateToFilter3" value="{{customerFilter.completeDateToFilter}}">
+                <input type="hidden" name="lastOrderFilter3" value="{{customerFilter.lastOrderFilter}}">
+                <input type="hidden" name="paymentTypeFilter3" value="{{customerFilter.paymentTypeFilter}}">
+                <input type="hidden" name="paymentDetailsFilter3" value="{{customerFilter.paymentDetailsFilter}}">
+                <input type="hidden" name="debtFilter3" value="{{customerFilter.debtFilter}}">
+                <input type="hidden" name="statusFilter3" value="{{customerFilter.statusFilter}}">
+                <input type="hidden" name="deliverySheetDateFilter3" value="{{customerFilter.deliverySheetDateFilter}}"> 
+                <input type="hidden" name="deliverySheetDateToFilter3" value="{{customerFilter.deliverySheetDateToFilter}}">
+                <input type="hidden" name="driverNameFilter3" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="raportFilter3" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="sortFilter3" value="{{customerFilter.driverNameFilter}}">
+                <input type="hidden" name="sortTypeFilter3" value="{{customerFilter.driverNameFilter}}">
                 
                 <div class="whatsapp_broadcast_input_select">
                     <label>Select All:</label>
@@ -60,26 +232,26 @@
                     <table id="customerTable" border="1">
                         <tr bgcolor="#696969" style="color: white;">
                             <td><b>Select</b></td>
-                            <td><b>ID</b></td>
-                            <td><b>Name</b></td>
-                            <td><b>Address</b></td>
-                            <td><b>Daerah</b></td>
-                            <td><b>Location</b></td>
-                            <td><b>PIC</b></td>
-                            <td><b>Phone Number</b></td>
-                            <td><b>Master List</b></td>
-                            <td><b>Invoice Date</b></td>
-                            <td><b>Due Date</b></td>
-                            <td><b>Delivery Date</b></td>
-                            <td><b>Complete Date</b></td>
-                            <td><b>Last Order</b></td>
-                            <td><b>Payment Type</b></td>
-                            <td><b>Payment Details</b></td>
-                            <td><b>Debt</b></td>
-                            <td><b>Raport</b></td>
-                            <td><b>Delivery Date</b></td>
-                            <td><b>Driver Name</b></td>
-                            <td><b>Status</b></td>
+                            <td><b>ID</b><br>[customerCode]</td>
+                            <td><b>Name</b><br>[name]</td>
+                            <td><b>Address</b><br>[address]</td>
+                            <td><b>Daerah</b><br>[daerah]</td>
+                            <td><b>Location</b><br>[location]</td>
+                            <td><b>PIC</b><br>[customerCode]</td>
+                            <td><b>Phone Number</b><br>[phone]</td>
+                            <td><b>Master List</b><br>[master_list_order]</td>
+                            <td><b>Invoice Date</b><br>[last_invoice]</td>
+                            <td><b>Due Date</b><br>[last_duedate]</td>
+                            <td><b>Delivery Date</b><br>[last_delivery]</td>
+                            <td><b>Complete Date</b><br>[last_complete]</td>
+                            <td><b>Last Order</b><br>[last_order]</td>
+                            <td><b>Payment Type</b><br>[last_payment]</td>
+                            <td><b>Payment Details</b><br>[payment_details]</td>
+                            <td><b>Debt</b><br>[debt]</td>
+                            <td><b>Raport</b><br>[raport]</td>
+                            <td><b>Delivery Date</td>
+                            <td><b>Driver Name</td>
+                            <td><b>Status</td>
                         </tr>
                     {% for customer in customers %}
                     <tr valign="top">
